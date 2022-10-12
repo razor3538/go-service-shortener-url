@@ -1,7 +1,6 @@
 package services
 
 import (
-	"example.com/m/v2/config"
 	"example.com/m/v2/domain"
 	"example.com/m/v2/internal/app/models"
 	"example.com/m/v2/repositories"
@@ -38,7 +37,7 @@ func (us *URLService) Save(urlModel models.ShortenURL) (domain.URL, error) {
 		shortURL[i] = letterBytes[rand.Intn(len(letterBytes))]
 	}
 
-	urlEntity.ShortURL = "http://" + config.Env.Host + "/" + string(shortURL)
+	urlEntity.ShortURL = "http://" + "localhost/" + string(shortURL)
 	urlEntity.FullURL = urlModel.URL
 
 	result, err := geolocationRepo.Save(urlEntity)
