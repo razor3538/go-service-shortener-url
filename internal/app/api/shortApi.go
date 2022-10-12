@@ -44,8 +44,7 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
-
-	println(urlModel.FullURL)
+	
 	println(urlModel.FullURL)
 	println(urlModel.FullURL)
 	println(urlModel.FullURL)

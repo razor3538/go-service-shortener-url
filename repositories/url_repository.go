@@ -21,7 +21,6 @@ func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
 }
 
 func (ur *URLRepo) Get(id string) (domain.URL, error) {
-	println(id)
 	var url domain.URL
 	if err := config.DB.
 		Table("urls as u").
