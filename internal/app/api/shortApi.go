@@ -44,8 +44,8 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(307, urlModel.FullURL)
-	//c.Writer.WriteHeader(200)
+	c.Redirect(http.StatusTemporaryRedirect, urlModel.FullURL)
+	//c.Writer.WriteHeader(307)
 	//c.Writer.Header().Set("Location", urlModel.FullURL)
 	//c.Writer.Header().Set("Cache-Control", "private, no-store, max-age=0, must-revalidate")
 }
