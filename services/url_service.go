@@ -22,8 +22,6 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 	println(urlModel)
 	println(urlModel)
 	println(urlModel)
-	println(urlModel)
-	println(urlModel)
 	hd := hashids.NewData()
 	hd.Salt = urlModel
 

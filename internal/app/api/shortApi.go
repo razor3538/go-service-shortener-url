@@ -17,29 +17,15 @@ func NewShortURLAPI() *ShortURLAPI {
 var urlService = services.NewURLService()
 
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
-	var body string
-
-	//err := json.NewDecoder(c.Request.Body).Decode(&body)
-	//if err != nil {
-	//	println("error")
-	//	tools.CreateError(http.StatusBadRequest, err, c)
-	//	return
-	//}
-
 	b, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
-	myString := string(b)
+	urlString := string(b)
 
-	println(myString)
-	println(myString)
-	println(myString)
-	println("myString")
-
-	urlModel, err := urlService.Save(body)
+	urlModel, err := urlService.Save(urlString)
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
