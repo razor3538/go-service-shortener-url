@@ -34,13 +34,10 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 }
 
 func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
-	var path models.PathID
+	name := c.Param("id")
 
-	if err := tools.RequestBinderURI(&path, c); err != nil {
-		return
-	}
-
-	urlModel, err := urlService.Get(path.ID)
+	print(name)
+	urlModel, err := urlService.Get(name)
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)

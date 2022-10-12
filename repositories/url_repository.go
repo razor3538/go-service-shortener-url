@@ -21,11 +21,12 @@ func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
 }
 
 func (ur *URLRepo) Get(id string) (domain.URL, error) {
+	print(id)
 	var url domain.URL
 	if err := config.DB.
 		Table("urls as u").
 		Select("u.*").
-		Where("u.id = ?", id).
+		Where("u.short_url = ?", id).
 		Scan(&url).
 		Error; err != nil {
 		return domain.URL{}, err
