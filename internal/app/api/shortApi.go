@@ -1,12 +1,11 @@
 package api
 
 import (
-	"encoding/json"
 	"example.com/m/v2/services"
 	"example.com/m/v2/tools"
 	"github.com/gin-gonic/gin"
+	"io"
 	"net/http"
-	"os"
 )
 
 type ShortURLAPI struct{}
@@ -20,23 +19,26 @@ var urlService = services.NewURLService()
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	var body string
 
-	err := json.NewDecoder(c.Request.Body).Decode(&body)
+	//err := json.NewDecoder(c.Request.Body).Decode(&body)
+	//if err != nil {
+	//	println("error")
+	//	tools.CreateError(http.StatusBadRequest, err, c)
+	//	return
+	//}
+
+	b, err := io.ReadAll(c.Request.Body)
 	if err != nil {
-		println("error")
-		println("error")
-		println("error")
-		println("error")
-		println("error")
-		println("error")
-		println("error")
-		println("error")
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
-	println(body)
+	myString := string(b)
 
-	os.Exit(1)
+	println(myString)
+	println(myString)
+	println(myString)
+	println("myString")
+
 	urlModel, err := urlService.Save(body)
 
 	if err != nil {
