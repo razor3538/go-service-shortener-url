@@ -29,8 +29,9 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
+	c.Writer.WriteHeader(http.StatusCreated)
 
-	c.JSON(http.StatusCreated, urlModel.ShortURL)
+	c.Writer.Write([]byte(urlModel.ShortURL))
 }
 
 func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
