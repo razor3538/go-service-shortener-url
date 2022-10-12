@@ -9,17 +9,17 @@ import (
 	"net/url"
 )
 
-type UrlService struct{}
+type URLService struct{}
 
-func NewUrlService() *UrlService {
-	return &UrlService{}
+func NewURLService() *URLService {
+	return &URLService{}
 }
 
-var geolocationRepo = repositories.NewUrlRepo()
+var geolocationRepo = repositories.NewURLRepo()
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-func (us *UrlService) Save(urlModel models.ShortenURL) (domain.URL, error) {
+func (us *URLService) Save(urlModel models.ShortenURL) (domain.URL, error) {
 	var urlEntity domain.URL
 
 	_, err := url.ParseRequestURI(urlModel.URL)
@@ -32,13 +32,13 @@ func (us *UrlService) Save(urlModel models.ShortenURL) (domain.URL, error) {
 		return domain.URL{}, err
 	}
 
-	shortUrl := make([]byte, 5)
+	shortURL := make([]byte, 5)
 
-	for i := range shortUrl {
-		shortUrl[i] = letterBytes[rand.Intn(len(letterBytes))]
+	for i := range shortURL {
+		shortURL[i] = letterBytes[rand.Intn(len(letterBytes))]
 	}
 
-	urlEntity.ShortURL = "http://" + config.Env.Host + "/" + string(shortUrl)
+	urlEntity.ShortURL = "http://" + config.Env.Host + "/" + string(shortURL)
 	urlEntity.FullURL = urlModel.URL
 
 	result, err := geolocationRepo.Save(urlEntity)
@@ -49,7 +49,7 @@ func (us *UrlService) Save(urlModel models.ShortenURL) (domain.URL, error) {
 	return result, nil
 }
 
-func (us *UrlService) Get(id string) (domain.URL, error) {
+func (us *URLService) Get(id string) (domain.URL, error) {
 	result, err := geolocationRepo.Get(id)
 	if err != nil {
 		return domain.URL{}, err

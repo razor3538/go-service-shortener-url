@@ -5,13 +5,13 @@ import (
 	"example.com/m/v2/domain"
 )
 
-type UrlRepo struct{}
+type URLRepo struct{}
 
-func NewUrlRepo() *UrlRepo {
-	return &UrlRepo{}
+func NewURLRepo() *URLRepo {
+	return &URLRepo{}
 }
 
-func (ur *UrlRepo) Save(url domain.URL) (domain.URL, error) {
+func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
 	if err := config.DB.
 		Create(&url).
 		Error; err != nil {
@@ -20,7 +20,7 @@ func (ur *UrlRepo) Save(url domain.URL) (domain.URL, error) {
 	return url, nil
 }
 
-func (ur *UrlRepo) Get(id string) (domain.URL, error) {
+func (ur *URLRepo) Get(id string) (domain.URL, error) {
 	var url domain.URL
 	if err := config.DB.
 		Table("urls as u").

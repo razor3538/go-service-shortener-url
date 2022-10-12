@@ -14,7 +14,7 @@ func NewShortURLAPI() *ShortURLAPI {
 	return &ShortURLAPI{}
 }
 
-var urlService = services.NewUrlService()
+var urlService = services.NewURLService()
 
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	var body models.ShortenURL
