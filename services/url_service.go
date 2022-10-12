@@ -5,7 +5,6 @@ import (
 	"example.com/m/v2/internal/app/models"
 	"example.com/m/v2/repositories"
 	"math/rand"
-	"net/url"
 )
 
 type URLService struct{}
@@ -21,15 +20,15 @@ const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 func (us *URLService) Save(urlModel models.ShortenURL) (domain.URL, error) {
 	var urlEntity domain.URL
 
-	_, err := url.ParseRequestURI(urlModel.URL)
-	if err != nil {
-		return domain.URL{}, err
-	}
-
-	u, err := url.Parse(urlModel.URL)
-	if err != nil || u.Host == "" {
-		return domain.URL{}, err
-	}
+	//_, err := url.ParseRequestURI(urlModel.URL)
+	//if err != nil {
+	//	return domain.URL{}, err
+	//}
+	//
+	//u, err := url.Parse(urlModel.URL)
+	//if err != nil || u.Host == "" {
+	//	return domain.URL{}, err
+	//}
 
 	shortURL := make([]byte, 5)
 
