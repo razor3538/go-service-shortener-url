@@ -16,7 +16,7 @@ func main() {
 		{
 			ID: "202210111116",
 			Migrate: func(tx *gorm.DB) error {
-				return tx.AutoMigrate(&domain.Url{}).Error
+				return tx.AutoMigrate(&domain.URL{}).Error
 			},
 			Rollback: func(tx *gorm.DB) error {
 				return tx.DropTable("url").Error

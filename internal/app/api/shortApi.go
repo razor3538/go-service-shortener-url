@@ -8,16 +8,16 @@ import (
 	"net/http"
 )
 
-type ShortUrlAPI struct{}
+type ShortURLAPI struct{}
 
-func NewShortUrlAPI() *ShortUrlAPI {
-	return &ShortUrlAPI{}
+func NewShortURLAPI() *ShortURLAPI {
+	return &ShortURLAPI{}
 }
 
 var urlService = services.NewUrlService()
 
-func (sua *ShortUrlAPI) ShortenUrl(c *gin.Context) {
-	var body models.ShortenUrl
+func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
+	var body models.ShortenURL
 
 	if err := tools.RequestBinderBody(&body, c); err != nil {
 		return
@@ -30,10 +30,10 @@ func (sua *ShortUrlAPI) ShortenUrl(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, urlModel.ShortUrl)
+	c.JSON(http.StatusCreated, urlModel.ShortURL)
 }
 
-func (sua *ShortUrlAPI) GetFullUrl(c *gin.Context) {
+func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 	var path models.PathID
 
 	if err := tools.RequestBinderURI(&path, c); err != nil {
@@ -47,5 +47,5 @@ func (sua *ShortUrlAPI) GetFullUrl(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusTemporaryRedirect, urlModel.FullUrl)
+	c.Redirect(http.StatusTemporaryRedirect, urlModel.FullURL)
 }

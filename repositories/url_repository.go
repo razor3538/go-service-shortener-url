@@ -11,24 +11,24 @@ func NewUrlRepo() *UrlRepo {
 	return &UrlRepo{}
 }
 
-func (ur *UrlRepo) Save(url domain.Url) (domain.Url, error) {
+func (ur *UrlRepo) Save(url domain.URL) (domain.URL, error) {
 	if err := config.DB.
 		Create(&url).
 		Error; err != nil {
-		return domain.Url{}, err
+		return domain.URL{}, err
 	}
 	return url, nil
 }
 
-func (ur *UrlRepo) Get(id string) (domain.Url, error) {
-	var url domain.Url
+func (ur *UrlRepo) Get(id string) (domain.URL, error) {
+	var url domain.URL
 	if err := config.DB.
 		Table("urls as u").
 		Select("u.*").
 		Where("u.id = ?", id).
 		Scan(&url).
 		Error; err != nil {
-		return domain.Url{}, err
+		return domain.URL{}, err
 	}
 	return url, nil
 }

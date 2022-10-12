@@ -1,7 +1,7 @@
 package domain
 
-type Url struct {
+type URL struct {
 	Base
-	FullUrl  string
-	ShortUrl string
+	FullURL  string
+	ShortURL string
 }
