@@ -17,15 +17,14 @@ var geolocationRepo = repositories.NewURLRepo()
 func (us *URLService) Save(urlModel string) (domain.URL, error) {
 	var urlEntity domain.URL
 
-	println(urlModel)
-	println(urlModel)
-	println(urlModel)
-	println(urlModel)
-	println(urlModel)
 	hd := hashids.NewData()
 	hd.Salt = urlModel
 
 	h, err := hashids.NewWithData(hd)
+
+	if err != nil {
+		return domain.URL{}, err
+	}
 
 	id, _ := h.Encode([]int{1, 2, 3})
 

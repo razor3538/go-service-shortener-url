@@ -33,9 +33,6 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	}
 	c.Writer.WriteHeader(http.StatusCreated)
 	c.Writer.Write([]byte(urlModel.ShortURL))
-
-	println(urlModel.FullURL)
-	println(urlModel.ShortURL)
 }
 
 func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
@@ -43,9 +40,6 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 
 	//_, err := urlService.Get(name)
 	urlModel, err := urlService.Get(name)
-	println(urlModel.ID)
-	println(urlModel.FullURL)
-	println(urlModel.ShortURL)
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
