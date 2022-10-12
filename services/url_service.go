@@ -36,7 +36,7 @@ func (us *URLService) Save(urlModel models.ShortenURL) (domain.URL, error) {
 		shortURL[i] = letterBytes[rand.Intn(len(letterBytes))]
 	}
 
-	urlEntity.ShortURL = "localhost:8080/" + string(shortURL)
+	urlEntity.ShortURL = "http://localhost:8080/" + string(shortURL)
 	urlEntity.FullURL = urlModel.URL
 
 	result, err := geolocationRepo.Save(urlEntity)
@@ -48,7 +48,7 @@ func (us *URLService) Save(urlModel models.ShortenURL) (domain.URL, error) {
 }
 
 func (us *URLService) Get(id string) (domain.URL, error) {
-	result, err := geolocationRepo.Get("localhost:8080/" + id)
+	result, err := geolocationRepo.Get("http://localhost:8080/" + id)
 	if err != nil {
 		return domain.URL{}, err
 	}
