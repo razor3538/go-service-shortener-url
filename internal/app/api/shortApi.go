@@ -45,6 +45,12 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 		return
 	}
 
+	println(urlModel.FullURL)
+	println(urlModel.FullURL)
+	println(urlModel.FullURL)
+	println(urlModel.FullURL)
+	println(urlModel.FullURL)
+
 	c.Writer.Header().Set("Location", urlModel.FullURL)
 
 	c.JSON(http.StatusTemporaryRedirect, nil)
