@@ -37,7 +37,6 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 	name := c.Param("id")
 
-	print(name)
 	urlModel, err := urlService.Get(name)
 
 	if err != nil {

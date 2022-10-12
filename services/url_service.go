@@ -33,7 +33,7 @@ func (us *URLService) Save(urlModel models.ShortenURL) (domain.URL, error) {
 	shortURL := make([]byte, 5)
 
 	for i := range shortURL {
-		shortURL[i] = letterBytes[rand.Intn(len(letterBytes))]
+		shortURL[i] = letterBytes[rand.Intn(len(urlModel.URL))]
 	}
 
 	urlEntity.ShortURL = "http://localhost:8080/" + string(shortURL)
