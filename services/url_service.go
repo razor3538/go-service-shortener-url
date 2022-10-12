@@ -15,11 +15,15 @@ func NewURLService() *URLService {
 
 var geolocationRepo = repositories.NewURLRepo()
 
-const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
 func (us *URLService) Save(urlModel models.ShortenURL) (domain.URL, error) {
 	var urlEntity domain.URL
 
+	println(urlModel.URL)
+	println(urlModel.URL)
+	println(urlModel.URL)
+	println(urlModel.URL)
+	println(urlModel.URL)
+	println(urlModel.URL)
 	hd := hashids.NewData()
 	hd.Salt = urlModel.URL
 
