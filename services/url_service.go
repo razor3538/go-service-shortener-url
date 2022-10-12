@@ -4,7 +4,7 @@ import (
 	"example.com/m/v2/domain"
 	"example.com/m/v2/internal/app/models"
 	"example.com/m/v2/repositories"
-	"math/rand"
+	"github.com/speps/go-hashids"
 )
 
 type URLService struct{}
@@ -20,23 +20,14 @@ const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 func (us *URLService) Save(urlModel models.ShortenURL) (domain.URL, error) {
 	var urlEntity domain.URL
 
-	//_, err := url.ParseRequestURI(urlModel.URL)
-	//if err != nil {
-	//	return domain.URL{}, err
-	//}
-	//
-	//u, err := url.Parse(urlModel.URL)
-	//if err != nil || u.Host == "" {
-	//	return domain.URL{}, err
-	//}
+	hd := hashids.NewData()
+	hd.Salt = urlModel.URL
 
-	shortURL := make([]byte, 5)
+	h, err := hashids.NewWithData(hd)
 
-	for i := range shortURL {
-		shortURL[i] = letterBytes[rand.Intn(len(urlModel.URL))]
-	}
+	id, _ := h.Encode([]int{1, 2, 3})
 
-	urlEntity.ShortURL = "http://localhost:8080/" + string(shortURL)
+	urlEntity.ShortURL = "http://localhost:8080/" + id
 	urlEntity.FullURL = urlModel.URL
 
 	result, err := geolocationRepo.Save(urlEntity)
