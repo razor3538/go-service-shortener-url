@@ -1,9 +1,11 @@
 package services
 
 import (
+	"errors"
 	"example.com/m/v2/domain"
 	"example.com/m/v2/repositories"
 	"github.com/speps/go-hashids"
+	"net/url"
 )
 
 type URLService struct{}
@@ -16,6 +18,12 @@ var geolocationRepo = repositories.NewURLRepo()
 
 func (us *URLService) Save(urlModel string) (domain.URL, error) {
 	var urlEntity domain.URL
+
+	_, err := url.ParseRequestURI(urlModel)
+
+	if err != nil {
+		return domain.URL{}, errors.New("не валидный URL")
+	}
 
 	hd := hashids.NewData()
 	hd.Salt = urlModel
