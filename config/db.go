@@ -20,7 +20,5 @@ func init() {
 
 	DB = db
 
-	DB.Raw("CREATE TABLE `urls` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `full_url` VARCHAR(164), `short_url` VARCHAR(164));")
-
 	fmt.Println("You connected to your database.")
 }
