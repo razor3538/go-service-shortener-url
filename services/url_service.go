@@ -36,7 +36,7 @@ func (us *URLService) Save(urlModel models.ShortenURL) (domain.URL, error) {
 		shortURL[i] = letterBytes[rand.Intn(len(letterBytes))]
 	}
 
-	urlEntity.ShortURL = "http://" + "localhost/" + string(shortURL)
+	urlEntity.ShortURL = string(shortURL)
 	urlEntity.FullURL = urlModel.URL
 
 	result, err := geolocationRepo.Save(urlEntity)
