@@ -30,8 +30,7 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 		return
 	}
 
-	//c.JSON(http.StatusCreated, urlModel.ShortURL)
-	c.String(http.StatusCreated, "", urlModel.ShortURL)
+	c.JSON(http.StatusCreated, urlModel.ShortURL)
 }
 
 func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
