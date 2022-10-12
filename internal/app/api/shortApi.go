@@ -6,6 +6,7 @@ import (
 	"example.com/m/v2/tools"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 )
 
 type ShortURLAPI struct{}
@@ -21,12 +22,21 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 	err := json.NewDecoder(c.Request.Body).Decode(&body)
 	if err != nil {
+		println("error")
+		println("error")
+		println("error")
+		println("error")
+		println("error")
+		println("error")
+		println("error")
+		println("error")
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
 	println(body)
 
+	os.Exit(1)
 	urlModel, err := urlService.Save(body)
 
 	if err != nil {
@@ -34,8 +44,8 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 		return
 	}
 	c.Writer.WriteHeader(http.StatusCreated)
-
 	c.Writer.Write([]byte(urlModel.ShortURL))
+
 	println(urlModel.FullURL)
 	println(urlModel.ShortURL)
 }
