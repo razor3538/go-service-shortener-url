@@ -10,8 +10,8 @@ func SetupRouter() *gin.Engine {
 
 	shortenAPI := api.NewShortURLAPI()
 
-	r.POST("/short-url", shortenAPI.ShortenURL)
-	r.GET("/short-url/:id", shortenAPI.GetFullURL)
+	r.POST("/", shortenAPI.ShortenURL)
+	r.GET("/:id", shortenAPI.GetFullURL)
 
 	return r
 }
