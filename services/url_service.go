@@ -2,7 +2,6 @@ package services
 
 import (
 	"example.com/m/v2/domain"
-	"example.com/m/v2/internal/app/models"
 	"example.com/m/v2/repositories"
 	"github.com/speps/go-hashids"
 )
@@ -15,24 +14,25 @@ func NewURLService() *URLService {
 
 var geolocationRepo = repositories.NewURLRepo()
 
-func (us *URLService) Save(urlModel models.ShortenURL) (domain.URL, error) {
+func (us *URLService) Save(urlModel string) (domain.URL, error) {
 	var urlEntity domain.URL
 
-	println(urlModel.URL)
-	println(urlModel.URL)
-	println(urlModel.URL)
-	println(urlModel.URL)
-	println(urlModel.URL)
-	println(urlModel.URL)
+	println(urlModel)
+	println(urlModel)
+	println(urlModel)
+	println(urlModel)
+	println(urlModel)
+	println(urlModel)
+	println(urlModel)
 	hd := hashids.NewData()
-	hd.Salt = urlModel.URL
+	hd.Salt = urlModel
 
 	h, err := hashids.NewWithData(hd)
 
 	id, _ := h.Encode([]int{1, 2, 3})
 
 	urlEntity.ShortURL = "http://localhost:8080/" + id
-	urlEntity.FullURL = urlModel.URL
+	urlEntity.FullURL = urlModel
 
 	result, err := geolocationRepo.Save(urlEntity)
 	if err != nil {

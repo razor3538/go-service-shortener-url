@@ -1,7 +1,7 @@
 package api
 
 import (
-	"example.com/m/v2/internal/app/models"
+	"encoding/json"
 	"example.com/m/v2/services"
 	"example.com/m/v2/tools"
 	"github.com/gin-gonic/gin"
@@ -17,11 +17,15 @@ func NewShortURLAPI() *ShortURLAPI {
 var urlService = services.NewURLService()
 
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
-	var body models.ShortenURL
+	var body string
 
-	if err := tools.RequestBinderBody(&body, c); err != nil {
+	err := json.NewDecoder(c.Request.Body).Decode(&body)
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
+
+	println(body)
 
 	urlModel, err := urlService.Save(body)
 
