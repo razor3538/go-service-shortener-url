@@ -37,20 +37,15 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 	name := c.Param("id")
 
-	_, err := urlService.Get(name)
-	//urlModel, err := urlService.Get(name)
+	//_, err := urlService.Get(name)
+	urlModel, err := urlService.Get(name)
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
-	println("c.GetHeader(Location)")
-	println(c.GetHeader("Location"))
 
-	c.Writer.Header().Set("Location", "https://google.com")
-	println("c.GetHeader(Location)")
-
-	//c.Writer.Header().Add("Location", urlModel.FullURL)
+	c.Writer.Header().Set("Location", urlModel.FullURL)
 
 	c.JSON(http.StatusTemporaryRedirect, nil)
 }
