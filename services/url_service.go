@@ -55,13 +55,15 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 	if os.Getenv("FILE_STORAGE_PATH") != "" {
 		file, err := os.OpenFile(os.Getenv("FILE_STORAGE_PATH")+"/urls.txt", os.O_RDWR|os.O_APPEND, 644)
 		if err != nil {
+			err := os.MkdirAll(os.Getenv("FILE_STORAGE_PATH"), 0750)
+			if err != nil {
+				return domain.URL{}, err
+			}
 			file, err = os.Create(os.Getenv("FILE_STORAGE_PATH") + "/urls.txt")
 			if err != nil {
 				return domain.URL{}, err
 			}
 		}
-
-		println(file.Name())
 
 		data, err := json.Marshal(result)
 		if err != nil {
