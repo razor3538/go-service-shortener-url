@@ -46,21 +46,23 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 		return domain.URL{}, err
 	}
 
-	file, err := os.OpenFile(os.Getenv("FILE_STORAGE_PATH"), os.O_RDWR|os.O_APPEND, 644)
-	if err != nil {
-		return domain.URL{}, err
-	}
+	if os.Getenv("FILE_STORAGE_PATH") != "" {
+		file, err := os.OpenFile(os.Getenv("FILE_STORAGE_PATH"), os.O_RDWR|os.O_APPEND, 644)
+		if err != nil {
+			return domain.URL{}, err
+		}
 
-	data, err := json.Marshal(result)
-	if err != nil {
-		return domain.URL{}, err
-	}
+		data, err := json.Marshal(result)
+		if err != nil {
+			return domain.URL{}, err
+		}
 
-	data = append(data, '\n')
+		data = append(data, '\n')
 
-	_, err = file.Write(data)
-	if err != nil {
-		return domain.URL{}, err
+		_, err = file.Write(data)
+		if err != nil {
+			return domain.URL{}, err
+		}
 	}
 
 	return result, nil
