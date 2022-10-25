@@ -37,7 +37,7 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 }
 
 func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
-	var body models.UrlRequestModel
+	var body models.URLRequestModel
 
 	if err := tools.RequestBinderBody(&body, c); err != nil {
 		return

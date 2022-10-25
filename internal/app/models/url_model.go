@@ -1,5 +1,5 @@
 package models
 
-type UrlRequestModel struct {
+type URLRequestModel struct {
 	URL string `json:"url"`
 }
