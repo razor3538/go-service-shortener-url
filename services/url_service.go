@@ -67,6 +67,9 @@ func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
 			return domain.URL{}, err
 		}
 		result, err = geolocationRepo.GetByFullURL(urlModel.FullURL)
+		if err != nil {
+			return domain.URL{}, err
+		}
 	}
 	if err != nil {
 		return domain.URL{}, err
