@@ -59,6 +59,14 @@ func (us *URLService) Get(id string) (domain.URL, error) {
 
 func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
 	result, err := geolocationRepo.GetByFullURL(url)
+
+	if result.FullURL == "" {
+		urlModel, err := us.Save(url)
+		if err != nil {
+			return domain.URL{}, err
+		}
+		result, err = geolocationRepo.GetByFullURL(urlModel.FullURL)
+	}
 	if err != nil {
 		return domain.URL{}, err
 	}
