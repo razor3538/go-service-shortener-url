@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	"example.com/m/v2/domain"
 	"example.com/m/v2/repositories"
@@ -41,6 +42,23 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 	urlEntity.FullURL = urlModel
 
 	result, err := geolocationRepo.Save(urlEntity)
+	if err != nil {
+		return domain.URL{}, err
+	}
+
+	file, err := os.OpenFile(os.Getenv("FILE_STORAGE_PATH"), os.O_RDWR|os.O_APPEND, 644)
+	if err != nil {
+		return domain.URL{}, err
+	}
+
+	data, err := json.Marshal(result)
+	if err != nil {
+		return domain.URL{}, err
+	}
+
+	data = append(data, '\n')
+
+	_, err = file.Write(data)
 	if err != nil {
 		return domain.URL{}, err
 	}
