@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "database/sql"
 	"example.com/m/v2/routes"
 	"github.com/joho/godotenv"
 	"log"
