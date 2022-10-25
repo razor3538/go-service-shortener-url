@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	_ "encoding/json"
 	"example.com/m/v2/internal/app/models"
 	"example.com/m/v2/services"
 	"example.com/m/v2/tools"
@@ -56,7 +55,7 @@ func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
 		"result": urlModel.ShortURL,
 	})
 
-	println(json);
+	println(json)
 
 	c.JSON(http.StatusCreated, gin.H{
 		"result": urlModel.ShortURL,
