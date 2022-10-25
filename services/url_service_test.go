@@ -2,6 +2,7 @@ package services
 
 import (
 	"example.com/m/v2/domain"
+	"os"
 	"reflect"
 	"testing"
 )
@@ -83,7 +84,7 @@ func TestURLService_Get(t *testing.T) {
 			want: domain.URL{
 				Base:     domain.Base{ID: 50},
 				FullURL:  "https://google.com",
-				ShortURL: "http://localhost:8080/y1IAte",
+				ShortURL: "http://" + os.Getenv("SERVER_ADDRESS") + "/y1IAte",
 			},
 			wantErr:      false,
 			wantLocation: "https://google.com",
@@ -125,7 +126,7 @@ func TestURLService_GetByFullURL(t *testing.T) {
 			want: domain.URL{
 				Base:     domain.Base{ID: 50},
 				FullURL:  "https://google.com",
-				ShortURL: "http://localhost:8080/y1IAte",
+				ShortURL: "http://" + os.Getenv("SERVER_ADDRESS") + "/y1IAte",
 			},
 			wantErr: false,
 		},

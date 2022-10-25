@@ -6,6 +6,7 @@ import (
 	"example.com/m/v2/repositories"
 	"github.com/speps/go-hashids"
 	"net/url"
+	"os"
 )
 
 type URLService struct{}
@@ -36,7 +37,7 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 
 	id, _ := h.Encode([]int{1, 2, 3})
 
-	urlEntity.ShortURL = "http://localhost:8080/" + id
+	urlEntity.ShortURL = os.Getenv("SERVER_ADDRESS") + "/" + id
 	urlEntity.FullURL = urlModel
 
 	result, err := geolocationRepo.Save(urlEntity)
@@ -48,7 +49,7 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 }
 
 func (us *URLService) Get(id string) (domain.URL, error) {
-	result, err := geolocationRepo.Get("http://localhost:8080/" + id)
+	result, err := geolocationRepo.Get(os.Getenv("SERVER_ADDRESS") + "/" + id)
 	println(result.FullURL)
 	if err != nil {
 		return domain.URL{}, err
