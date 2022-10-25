@@ -13,9 +13,15 @@ func main() {
 		log.Fatal("Error loading .env.example file")
 	}
 
+	address := os.Getenv("SERVER_ADDRESS")
+
+	if address == "" {
+		address = "localhost:8080"
+	}
+
 	r := routes.SetupRouter()
 
-	if err := r.Run(os.Getenv("SERVER_ADDRESS")); err != nil {
+	if err := r.Run(address); err != nil {
 		panic(err)
 	}
 }
