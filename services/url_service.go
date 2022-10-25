@@ -6,7 +6,6 @@ import (
 	"example.com/m/v2/domain"
 	"example.com/m/v2/repositories"
 	"github.com/speps/go-hashids"
-	"log"
 	"net/url"
 	"os"
 )
@@ -54,12 +53,7 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 	}
 
 	if os.Getenv("FILE_STORAGE_PATH") != "" {
-		path, err := os.Executable()
-		if err != nil {
-			log.Println(err)
-		}
-
-		file, err := os.OpenFile(path+os.Getenv("FILE_STORAGE_PATH")+"/urls.txt", os.O_RDWR|os.O_APPEND, 644)
+		file, err := os.OpenFile("go-service-shortener-url/"+os.Getenv("FILE_STORAGE_PATH")+"/urls.txt", os.O_RDWR|os.O_APPEND, 644)
 		if err != nil {
 			return domain.URL{}, err
 		}
