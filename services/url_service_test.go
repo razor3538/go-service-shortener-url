@@ -131,7 +131,7 @@ func TestURLService_GetByFullURL(t *testing.T) {
 		},
 		{
 			name:    "invalid test",
-			wantErr: false,
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
