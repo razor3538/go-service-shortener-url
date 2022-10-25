@@ -37,7 +37,7 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 
 	id, _ := h.Encode([]int{1, 2, 3})
 
-	urlEntity.ShortURL = os.Getenv("SERVER_ADDRESS") + "/" + id
+	urlEntity.ShortURL = "http://" + os.Getenv("SERVER_ADDRESS") + "/" + id
 	urlEntity.FullURL = urlModel
 
 	result, err := geolocationRepo.Save(urlEntity)
@@ -49,7 +49,7 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 }
 
 func (us *URLService) Get(id string) (domain.URL, error) {
-	result, err := geolocationRepo.Get(os.Getenv("SERVER_ADDRESS") + "/" + id)
+	result, err := geolocationRepo.Get("http://" + os.Getenv("SERVER_ADDRESS") + "/" + id)
 	println(result.FullURL)
 	if err != nil {
 		return domain.URL{}, err
