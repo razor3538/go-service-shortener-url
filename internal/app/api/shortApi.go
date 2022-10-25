@@ -56,8 +56,11 @@ func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
 		"result": urlModel.ShortURL,
 	})
 
-	c.Writer.WriteHeader(http.StatusCreated)
-	c.Writer.Write(json)
+	println(json);
+
+	c.JSON(http.StatusCreated, gin.H{
+		"result": urlModel.ShortURL,
+	})
 }
 
 func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
