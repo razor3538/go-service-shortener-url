@@ -59,7 +59,7 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 			log.Println(err)
 		}
 
-		file, err := os.OpenFile(path+os.Getenv("FILE_STORAGE_PATH"), os.O_RDWR|os.O_APPEND, 644)
+		file, err := os.OpenFile(path+os.Getenv("FILE_STORAGE_PATH")+"/urls.txt", os.O_RDWR|os.O_APPEND, 644)
 		if err != nil {
 			return domain.URL{}, err
 		}
