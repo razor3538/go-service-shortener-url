@@ -55,13 +55,13 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 	if os.Getenv("FILE_STORAGE_PATH") != "" {
 		file, err := os.OpenFile("go-service-shortener-url"+os.Getenv("FILE_STORAGE_PATH")+"/urls.txt", os.O_RDWR|os.O_APPEND, 644)
 		if err != nil {
-			os.Create("go-service-shortener-url" + os.Getenv("FILE_STORAGE_PATH") + "/urls.txt")
+			file, err = os.Create("go-service-shortener-url" + os.Getenv("FILE_STORAGE_PATH") + "/urls.txt")
+			if err != nil {
+				return domain.URL{}, err
+			}
 		}
 
-		file, err = os.OpenFile("go-service-shortener-url"+os.Getenv("FILE_STORAGE_PATH")+"/urls.txt", os.O_RDWR|os.O_APPEND, 644)
-		if err != nil {
-			return domain.URL{}, err
-		}
+		println(file.Name())
 
 		data, err := json.Marshal(result)
 		if err != nil {
