@@ -1,6 +1,7 @@
 package api
 
 import (
+	"example.com/m/v2/internal/app/models"
 	"example.com/m/v2/services"
 	"example.com/m/v2/tools"
 	"github.com/gin-gonic/gin"
@@ -33,6 +34,25 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	}
 	c.Writer.WriteHeader(http.StatusCreated)
 	c.Writer.Write([]byte(urlModel.ShortURL))
+}
+
+func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
+	var body models.UrlRequestModel
+
+	if err := tools.RequestBinderBody(&body, c); err != nil {
+		return
+	}
+
+	urlModel, err := urlService.GetByFullURL(body.URL)
+
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"result": urlModel.ShortURL,
+	})
 }
 
 func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {

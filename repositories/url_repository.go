@@ -32,3 +32,16 @@ func (ur *URLRepo) Get(id string) (domain.URL, error) {
 	}
 	return url, nil
 }
+
+func (ur *URLRepo) GetByFullURL(id string) (domain.URL, error) {
+	var url domain.URL
+	if err := config.DB.
+		Table("urls as u").
+		Select("u.*").
+		Where("u.full_url = ?", id).
+		Scan(&url).
+		Error; err != nil {
+		return domain.URL{}, err
+	}
+	return url, nil
+}

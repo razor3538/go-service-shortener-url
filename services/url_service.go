@@ -49,6 +49,16 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 
 func (us *URLService) Get(id string) (domain.URL, error) {
 	result, err := geolocationRepo.Get("http://localhost:8080/" + id)
+	println(result.FullURL)
+	if err != nil {
+		return domain.URL{}, err
+	}
+
+	return result, nil
+}
+
+func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
+	result, err := geolocationRepo.GetByFullURL(url)
 	if err != nil {
 		return domain.URL{}, err
 	}

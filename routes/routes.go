@@ -12,6 +12,8 @@ func SetupRouter() *gin.Engine {
 
 	r.POST("/", shortenAPI.ShortenURL)
 
+	r.POST("/api/shorten", shortenAPI.ReturnFullURL)
+
 	r.GET("/:id", shortenAPI.GetFullURL)
 
 	return r
