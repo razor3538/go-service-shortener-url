@@ -50,7 +50,6 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 
 func (us *URLService) Get(id string) (domain.URL, error) {
 	result, err := geolocationRepo.Get("http://" + os.Getenv("SERVER_ADDRESS") + "/" + id)
-	println(result.FullURL)
 	if err != nil {
 		return domain.URL{}, err
 	}

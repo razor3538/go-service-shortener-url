@@ -51,11 +51,16 @@ func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
 		return
 	}
 
-	json, err := json.Marshal(gin.H{
+	jsonModel, err := json.Marshal(gin.H{
 		"result": urlModel.ShortURL,
 	})
 
-	println(json)
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+
+	println(jsonModel)
 
 	c.JSON(http.StatusCreated, gin.H{
 		"result": urlModel.ShortURL,
