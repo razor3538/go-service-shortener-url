@@ -2,16 +2,14 @@ package main
 
 import (
 	"example.com/m/v2/routes"
-	"github.com/joho/godotenv"
-	"log"
 	"os"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env.example file")
-	}
+	//err := godotenv.Load()
+	//if err != nil {
+	//	log.Fatal("Error loading .env.example file")
+	//}
 
 	address := os.Getenv("SERVER_ADDRESS")
 
