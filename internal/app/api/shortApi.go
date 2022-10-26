@@ -27,7 +27,7 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	if strings.Contains(c.Request.Header.Get("Accept-Encoding"), "gzip") {
 		gz, err := gzip.NewReader(c.Request.Body)
 		if err != nil {
-			tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 1"), c)
+			tools.CreateError(http.StatusBadRequest, err, c)
 			return
 		}
 		defer gz.Close()
