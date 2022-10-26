@@ -39,9 +39,6 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 		}
 		urlString = string(b)
 
-		tools.CreateError(http.StatusBadRequest, errors.New(urlString), c)
-		return
-
 	} else {
 		b, err := io.ReadAll(c.Request.Body)
 		if err != nil {
