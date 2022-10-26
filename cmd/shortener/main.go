@@ -1,21 +1,28 @@
 package main
 
 import (
+	vars "example.com/m/v2/init"
 	"example.com/m/v2/routes"
-	"github.com/joho/godotenv"
-	"log"
+	"flag"
 	"os"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env.example file")
+	flag.Parse()
+
+	address := os.Getenv("SERVER_ADDRESS")
+
+	if address == "" {
+		if *vars.Flag.Address != "" {
+			address = *vars.Flag.Address
+		} else {
+			address = "localhost:8080"
+		}
 	}
 
 	r := routes.SetupRouter()
 
-	if err := r.Run(os.Getenv("SERVER_ADDRESS")); err != nil {
+	if err := r.Run(address); err != nil {
 		panic(err)
 	}
 }
