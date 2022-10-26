@@ -8,7 +8,6 @@ import (
 	"github.com/speps/go-hashids"
 	"net/url"
 	"os"
-	"strings"
 )
 
 type URLService struct{}
@@ -54,16 +53,18 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 	}
 
 	if os.Getenv("FILE_STORAGE_PATH") != "" {
-		dir, fileName, _ := strings.Cut(os.Getenv("FILE_STORAGE_PATH"), "/")
-		err := os.MkdirAll(dir, 0750)
-		if err != nil {
-			return domain.URL{}, err
-		}
-		file, err := os.OpenFile(dir+"/"+fileName, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
+		file, err := os.OpenFile(os.Getenv("FILE_STORAGE_PATH"), os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
 
-		if err != nil {
-			return domain.URL{}, err
-		}
+		//dir, fileName, _ := strings.Cut(os.Getenv("FILE_STORAGE_PATH"), "/")
+		//err := os.MkdirAll(dir, 0750)
+		//if err != nil {
+		//	return domain.URL{}, err
+		//}
+		//file, err := os.OpenFile(dir+"/"+fileName, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
+		//
+		//if err != nil {
+		//	return domain.URL{}, err
+		//}
 
 		data, err := json.Marshal(result)
 		if err != nil {
