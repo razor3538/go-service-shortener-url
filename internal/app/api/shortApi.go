@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"example.com/m/v2/internal/app/models"
 	"example.com/m/v2/services"
 	"example.com/m/v2/tools"
@@ -28,8 +27,6 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 		return
 	}
 	urlString = string(b)
-
-	tools.CreateError(http.StatusBadRequest, errors.New(urlString), c)
 
 	urlModel, err := urlService.Save(urlString)
 
