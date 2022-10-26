@@ -24,8 +24,8 @@ var urlService = services.NewURLService()
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	var urlString string
 
-	if c.GetHeader("Accept-Encoding") != "" {
-		tools.CreateError(http.StatusBadRequest, errors.New("qwerty"), c)
+	if c.GetHeader("Accept-Encoding") == "gzip" {
+		tools.CreateError(http.StatusBadRequest, errors.New(c.GetHeader("Accept-Encoding")), c)
 	}
 
 	if strings.Contains(c.GetHeader("Accept-Encoding"), "application/gzip") {
