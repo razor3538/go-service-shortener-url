@@ -35,6 +35,10 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	}
 	c.Writer.WriteHeader(http.StatusCreated)
 	c.Writer.Write([]byte(urlModel.ShortURL))
+
+	if c.GetHeader("Content-Encoding") == "application/gzip" {
+		c.String(http.StatusCreated, urlModel.ShortURL)
+	}
 }
 
 func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
