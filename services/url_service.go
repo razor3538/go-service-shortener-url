@@ -31,7 +31,7 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 	_, err := url.ParseRequestURI(urlModel)
 
 	if err != nil {
-		return domain.URL{}, errors.New(urlModel)
+		return domain.URL{}, errors.New("не валидный URL")
 	}
 
 	hd := hashids.NewData()
