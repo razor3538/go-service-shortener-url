@@ -48,7 +48,9 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 		urlString = string(b)
 	}
 
-	tools.CreateError(http.StatusBadRequest, errors.New("qwerty"), c)
+	if strings.Contains(c.Request.Header.Get("Accept-Encoding"), "application/gzip") {
+		tools.CreateError(http.StatusBadRequest, errors.New("qwerty"), c)
+	}
 
 	urlModel, err := urlService.Save(urlString)
 
