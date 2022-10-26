@@ -42,14 +42,14 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 		tools.CreateError(http.StatusBadRequest, errors.New(urlString), c)
 		return
 
+	} else {
+		b, err := io.ReadAll(c.Request.Body)
+		if err != nil {
+			tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 3"), c)
+			return
+		}
+		urlString = string(b)
 	}
-
-	b, err := io.ReadAll(c.Request.Body)
-	if err != nil {
-		tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 3"), c)
-		return
-	}
-	urlString = string(b)
 
 	urlModel, err := urlService.Save(urlString)
 
