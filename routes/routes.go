@@ -11,7 +11,7 @@ func SetupRouter() *gin.Engine {
 
 	shortenAPI := api.NewShortURLAPI()
 
-	r.Use(gzip.Gzip(gzip.DefaultCompression))
+	r.Use(gzip.Gzip(gzip.BestCompression))
 
 	r.POST("/", shortenAPI.ShortenURL)
 
