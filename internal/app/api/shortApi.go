@@ -1,6 +1,7 @@
 package api
 
 import (
+	"compress/gzip"
 	"encoding/json"
 	"errors"
 	"example.com/m/v2/internal/app/models"
@@ -9,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -25,22 +25,23 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	var urlString string
 
 	if strings.Contains(c.Request.Header.Get("Accept-Encoding"), "gzip") {
-		os.Exit(1)
-		//	gz, err := gzip.NewReader(c.Request.Body)
-		//	if err != nil {
-		//		tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 1"), c)
-		//		return
-		//	}
-		//	defer gz.Close()
-		//
-		//	b, err := io.ReadAll(gz)
-		//	if err != nil {
-		//		tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 2"), c)
-		//		return
-		//	}
-		//	urlString = string(b)
-		//
-		//} else {
+		gz, err := gzip.NewReader(c.Request.Body)
+		if err != nil {
+			tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 1"), c)
+			return
+		}
+		defer gz.Close()
+
+		b, err := io.ReadAll(gz)
+		if err != nil {
+			tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 2"), c)
+			return
+		}
+		urlString = string(b)
+
+		tools.CreateError(http.StatusBadRequest, errors.New(urlString), c)
+		return
+
 	}
 
 	b, err := io.ReadAll(c.Request.Body)
