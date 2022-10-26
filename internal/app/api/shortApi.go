@@ -1,6 +1,7 @@
 package api
 
 import (
+	"compress/gzip"
 	"encoding/json"
 	"example.com/m/v2/internal/app/models"
 	"example.com/m/v2/services"
@@ -8,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
+	"strings"
 )
 
 type ShortURLAPI struct{}
@@ -19,13 +21,33 @@ func NewShortURLAPI() *ShortURLAPI {
 var urlService = services.NewURLService()
 
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
-	b, err := io.ReadAll(c.Request.Body)
-	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
-		return
-	}
+	var urlString string
 
-	urlString := string(b)
+	if !strings.Contains(c.Request.Header.Get("Accept-Encoding"), "gzip") {
+		gz, err := gzip.NewReader(c.Request.Body)
+		if err != nil {
+			tools.CreateError(http.StatusBadRequest, err, c)
+			return
+		}
+		// не забывайте потом закрыть *gzip.Reader
+		defer gz.Close()
+
+		// при чтении вернётся распакованный слайс байт
+		b, err := io.ReadAll(gz)
+		if err != nil {
+			tools.CreateError(http.StatusBadRequest, err, c)
+			return
+		}
+		urlString = string(b)
+
+	} else {
+		b, err := io.ReadAll(c.Request.Body)
+		if err != nil {
+			tools.CreateError(http.StatusBadRequest, err, c)
+			return
+		}
+		urlString = string(b)
+	}
 
 	urlModel, err := urlService.Save(urlString)
 
@@ -35,10 +57,6 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	}
 	c.Writer.WriteHeader(http.StatusCreated)
 	c.Writer.Write([]byte(urlModel.ShortURL))
-
-	if c.GetHeader("Content-Encoding") == "application/gzip" {
-		c.String(http.StatusCreated, urlModel.ShortURL)
-	}
 }
 
 func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
