@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"example.com/m/v2/domain"
+	vars "example.com/m/v2/init"
 	"example.com/m/v2/repositories"
 	"github.com/speps/go-hashids"
 	"net/url"
@@ -30,7 +31,7 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 	_, err := url.ParseRequestURI(urlModel)
 
 	if err != nil {
-		return domain.URL{}, errors.New("не валидный URL")
+		return domain.URL{}, errors.New(urlModel)
 	}
 
 	hd := hashids.NewData()
@@ -52,8 +53,14 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 		return domain.URL{}, err
 	}
 
-	if os.Getenv("FILE_STORAGE_PATH") != "" {
-		file, err := os.OpenFile(os.Getenv("FILE_STORAGE_PATH"), os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
+	filePath := os.Getenv("FILE_STORAGE_PATH")
+
+	if filePath == "" {
+		filePath = *vars.Flag.FilePath
+	}
+
+	if filePath != "" {
+		file, err := os.OpenFile(filePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
 		if err != nil {
 			return domain.URL{}, err
 		}
