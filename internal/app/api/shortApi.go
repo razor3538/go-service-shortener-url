@@ -25,6 +25,8 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	var urlString string
 
 	if strings.Contains(c.Request.Header.Get("Accept-Encoding"), "application/gzip") {
+		tools.CreateError(http.StatusBadRequest, errors.New("qwerty"), c)
+
 		gz, err := gzip.NewReader(c.Request.Body)
 		if err != nil {
 			tools.CreateError(http.StatusBadRequest, err, c)
@@ -48,9 +50,8 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 		urlString = string(b)
 	}
 
-	if strings.Contains(c.Request.Header.Get("Accept-Encoding"), "application/gzip") {
-		tools.CreateError(http.StatusBadRequest, errors.New("qwerty"), c)
-	}
+	//if strings.Contains(c.Request.Header.Get("Accept-Encoding"), "application/gzip") {
+	//}
 
 	urlModel, err := urlService.Save(urlString)
 
