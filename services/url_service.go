@@ -57,15 +57,14 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 		dir, fileName, _ := strings.Cut(os.Getenv("FILE_STORAGE_PATH"), "/")
 		err := os.MkdirAll(dir, 0750)
 		if err != nil {
+			println("имя папки и файла")
 			println(dir, fileName)
-			os.Exit(1)
 			return domain.URL{}, err
 		}
 		file, err := os.Create(dir + "/" + fileName + ".txt")
 		if err != nil {
-			println(dir + "/" + fileName + ".txt")
+			println(os.Getenv("енви файл"))
 			println(os.Getenv("FILE_STORAGE_PATH"))
-			os.Exit(0)
 			return domain.URL{}, err
 		}
 
