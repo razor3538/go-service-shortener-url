@@ -2,6 +2,7 @@ package routes
 
 import (
 	"example.com/m/v2/internal/app/api"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,6 +10,8 @@ func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
 	shortenAPI := api.NewShortURLAPI()
+
+	r.Use(gzip.Gzip(gzip.BestCompression))
 
 	r.POST("/", shortenAPI.ShortenURL)
 
