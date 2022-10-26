@@ -3,6 +3,7 @@ package api
 import (
 	"compress/gzip"
 	"encoding/json"
+	"errors"
 	"example.com/m/v2/internal/app/models"
 	"example.com/m/v2/services"
 	"example.com/m/v2/tools"
@@ -26,16 +27,14 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	if strings.Contains(c.Request.Header.Get("Accept-Encoding"), "application/gzip") {
 		gz, err := gzip.NewReader(c.Request.Body)
 		if err != nil {
-			tools.CreateError(http.StatusBadRequest, err, c)
+			tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 1"), c)
 			return
 		}
-		// не забывайте потом закрыть *gzip.Reader
 		defer gz.Close()
 
-		// при чтении вернётся распакованный слайс байт
 		b, err := io.ReadAll(gz)
 		if err != nil {
-			tools.CreateError(http.StatusBadRequest, err, c)
+			tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 2"), c)
 			return
 		}
 		urlString = string(b)
@@ -43,7 +42,7 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	} else {
 		b, err := io.ReadAll(c.Request.Body)
 		if err != nil {
-			tools.CreateError(http.StatusBadRequest, err, c)
+			tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 3"), c)
 			return
 		}
 		urlString = string(b)
