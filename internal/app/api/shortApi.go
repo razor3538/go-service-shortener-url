@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
-	"strings"
 )
 
 type ShortURLAPI struct{}
@@ -25,10 +24,6 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	var urlString string
 
 	if c.GetHeader("Accept-Encoding") == "gzip" {
-		tools.CreateError(http.StatusBadRequest, errors.New(c.GetHeader("Accept-Encoding")), c)
-	}
-
-	if strings.Contains(c.GetHeader("Accept-Encoding"), "application/gzip") {
 		gz, err := gzip.NewReader(c.Request.Body)
 		if err != nil {
 			tools.CreateError(http.StatusBadRequest, err, c)
@@ -42,18 +37,14 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 			return
 		}
 		urlString = string(b)
-
-	} else {
-		b, err := io.ReadAll(c.Request.Body)
-		if err != nil {
-			tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 3"), c)
-			return
-		}
-		urlString = string(b)
 	}
 
-	//if strings.Contains(c.Request.Header.Get("Accept-Encoding"), "application/gzip") {
+	//b, err := io.ReadAll(c.Request.Body)
+	//if err != nil {
+	//	tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 3"), c)
+	//	return
 	//}
+	//urlString = string(b)
 
 	urlModel, err := urlService.Save(urlString)
 
