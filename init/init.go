@@ -14,7 +14,7 @@ type env struct {
 type flags struct {
 	Address  *string
 	FilePath *string
-	BaseUrl  *string
+	BaseURL  *string
 }
 
 var Env env
@@ -29,6 +29,6 @@ func init() {
 	Flag = flags{
 		Address:  flag.String("a", "localhost:8080", "Server name"),
 		FilePath: flag.String("f", "tmp", "File path"),
-		BaseUrl:  flag.String("b", "", "Base url dir"),
+		BaseURL:  flag.String("b", "", "Base url dir"),
 	}
 }
