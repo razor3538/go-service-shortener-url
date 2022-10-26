@@ -48,6 +48,8 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 		urlString = string(b)
 	}
 
+	tools.CreateError(http.StatusBadRequest, errors.New("qwerty"), c)
+
 	urlModel, err := urlService.Save(urlString)
 
 	if err != nil {
