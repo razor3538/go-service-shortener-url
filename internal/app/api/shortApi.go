@@ -1,7 +1,6 @@
 package api
 
 import (
-	"compress/gzip"
 	"encoding/json"
 	"errors"
 	"example.com/m/v2/internal/app/models"
@@ -10,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
-	"strings"
 )
 
 type ShortURLAPI struct{}
@@ -24,29 +22,30 @@ var urlService = services.NewURLService()
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	var urlString string
 
-	if strings.Contains(c.Request.Header.Get("Accept-Encoding"), "application/gzip") {
-		gz, err := gzip.NewReader(c.Request.Body)
-		if err != nil {
-			tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 1"), c)
-			return
-		}
-		defer gz.Close()
+	//if strings.Contains(c.Request.Header.Get("Accept-Encoding"), "application/gzip") {
+	//	gz, err := gzip.NewReader(c.Request.Body)
+	//	if err != nil {
+	//		tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 1"), c)
+	//		return
+	//	}
+	//	defer gz.Close()
+	//
+	//	b, err := io.ReadAll(gz)
+	//	if err != nil {
+	//		tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 2"), c)
+	//		return
+	//	}
+	//	urlString = string(b)
+	//
+	//} else {
+	//}
 
-		b, err := io.ReadAll(gz)
-		if err != nil {
-			tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 2"), c)
-			return
-		}
-		urlString = string(b)
-
-	} else {
-		b, err := io.ReadAll(c.Request.Body)
-		if err != nil {
-			tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 3"), c)
-			return
-		}
-		urlString = string(b)
+	b, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, errors.New("ошибка номер 3"), c)
+		return
 	}
+	urlString = string(b)
 
 	urlModel, err := urlService.Save(urlString)
 
