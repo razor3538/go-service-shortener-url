@@ -33,8 +33,8 @@ func CheckFlagEnv() {
 		filePath = ""
 	}
 
-	var flagAddress = *flag.String("a", "localhost:8080", "Server name")
-	var flagFilePath = *flag.String("f", "tmp", "File path")
+	var flagAddress = *flag.String("a", "", "Server name")
+	var flagFilePath = *flag.String("f", "", "File path")
 	var flagBaseUrl = *flag.String("b", "", "Base url dir")
 
 	if flagAddress != "" {
