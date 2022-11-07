@@ -19,9 +19,7 @@ func NewShortURLAPI() *ShortURLAPI {
 var urlService = services.NewURLService()
 
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
-	var reader io.Reader
-
-	reader = c.Request.Body
+	var reader = c.Request.Body
 
 	b, err := io.ReadAll(reader)
 	if err != nil {
