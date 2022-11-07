@@ -1,9 +1,9 @@
 package config
 
 import (
+	_ "database/sql"
 	"example.com/m/v2/domain"
 	"fmt"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"os"
