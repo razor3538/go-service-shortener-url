@@ -24,7 +24,7 @@ func CheckFlagEnv() {
 	if os.Getenv("SERVER_ADDRESS") != "" {
 		address = os.Getenv("SERVER_ADDRESS")
 	} else {
-		address = "localhost:8000"
+		address = "localhost:8080"
 	}
 
 	if os.Getenv("FILE_STORAGE_PATH") != "" {
