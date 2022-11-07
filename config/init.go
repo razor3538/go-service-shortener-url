@@ -35,7 +35,7 @@ func CheckFlagEnv() {
 
 	var flagAddress = flag.String("a", "", "Server name")
 	var flagFilePath = flag.String("f", "", "File path")
-	var flagBaseUrl = flag.String("b", "", "Base url dir")
+	var flagBaseURL = flag.String("b", "", "Base url dir")
 
 	flag.Parse()
 
@@ -47,8 +47,8 @@ func CheckFlagEnv() {
 		filePath = *flagFilePath
 	}
 
-	if *flagBaseUrl != "" {
-		basePath = *flagBaseUrl
+	if *flagBaseURL != "" {
+		basePath = *flagBaseURL
 	}
 
 	Env = env{
