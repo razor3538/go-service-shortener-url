@@ -3,8 +3,8 @@ package services
 import (
 	"encoding/json"
 	"errors"
+	"example.com/m/v2/config"
 	"example.com/m/v2/domain"
-	vars "example.com/m/v2/init"
 	"example.com/m/v2/repositories"
 	"github.com/speps/go-hashids"
 	"net/url"
@@ -17,16 +17,12 @@ func NewURLService() *URLService {
 	return &URLService{}
 }
 
-var address = os.Getenv("SERVER_ADDRESS")
+var address = config.Env.Address
 
 var geolocationRepo = repositories.NewURLRepo()
 
 func (us *URLService) Save(urlModel string) (domain.URL, error) {
 	var urlEntity domain.URL
-
-	if address == "" {
-		address = "localhost:8080"
-	}
 
 	_, err := url.ParseRequestURI(urlModel)
 
@@ -53,11 +49,7 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 		return domain.URL{}, err
 	}
 
-	filePath := os.Getenv("FILE_STORAGE_PATH")
-
-	if filePath == "" {
-		filePath = *vars.Flag.FilePath
-	}
+	filePath := config.Env.FilePath
 
 	if filePath != "" {
 		file, err := os.OpenFile(filePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
@@ -82,10 +74,6 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 }
 
 func (us *URLService) Get(id string) (domain.URL, error) {
-	if address == "" {
-		address = "localhost:8080"
-	}
-
 	result, err := geolocationRepo.Get("http://" + address + "/" + id)
 	if err != nil {
 		return domain.URL{}, err

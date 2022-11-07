@@ -1,6 +1,7 @@
 package config
 
 import (
+	"example.com/m/v2/domain"
 	"fmt"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"gorm.io/driver/sqlite"
@@ -33,6 +34,11 @@ func init() {
 	}
 
 	DB = db
+
+	err = db.Table("urls").AutoMigrate(&domain.URL{})
+	if err != nil {
+		panic(err)
+	}
 
 	fmt.Println("You connected to your database.")
 }
