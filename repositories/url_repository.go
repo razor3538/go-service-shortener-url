@@ -22,12 +22,17 @@ func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
 	}
 	filePath := config.Env.FilePath
 
+	println(filePath)
+	println(filePath)
+	println(filePath)
+	println(filePath)
+	println(filePath)
+
 	if filePath != "" {
 		file, err := os.OpenFile(filePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
 		if err != nil {
 			err = os.Mkdir(strings.Split(filePath, "/")[0], 0777)
 			if err != nil {
-				println(err.Error())
 				return domain.URL{}, err
 			}
 			file, err = os.OpenFile(filePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
