@@ -1,8 +1,11 @@
 package repositories
 
 import (
+	"encoding/json"
 	"example.com/m/v2/config"
 	"example.com/m/v2/domain"
+	"os"
+	"strings"
 )
 
 type URLRepo struct{}
@@ -17,6 +20,34 @@ func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
 		Error; err != nil {
 		return domain.URL{}, err
 	}
+	filePath := config.Env.FilePath
+
+	if filePath != "" {
+		file, err := os.OpenFile(filePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
+		if err != nil {
+			err = os.Mkdir(strings.Split(filePath, "/")[0], 0777)
+			if err != nil {
+				return domain.URL{}, err
+			}
+			file, err = os.OpenFile(filePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
+			if err != nil {
+				return domain.URL{}, err
+			}
+		}
+
+		data, err := json.Marshal(url)
+		if err != nil {
+			return domain.URL{}, err
+		}
+
+		data = append(data, '\n')
+
+		_, err = file.Write(data)
+		if err != nil {
+			return domain.URL{}, err
+		}
+	}
+
 	return url, nil
 }
 
