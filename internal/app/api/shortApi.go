@@ -21,17 +21,6 @@ var urlService = services.NewURLService()
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	var reader io.Reader
 
-	//if c.Request.Header.Get(`Content-Encoding`) == `gzip` {
-	//	gz, err := gzip.NewReader(c.Request.Body)
-	//	if err != nil {
-	//		http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
-	//		return
-	//	}
-	//	reader = gz
-	//	defer gz.Close()
-	//} else {
-	//}
-
 	reader = c.Request.Body
 
 	b, err := io.ReadAll(reader)
