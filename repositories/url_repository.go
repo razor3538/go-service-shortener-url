@@ -5,6 +5,7 @@ import (
 	"example.com/m/v2/config"
 	"example.com/m/v2/domain"
 	"os"
+	"strings"
 )
 
 type URLRepo struct{}
@@ -24,7 +25,15 @@ func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
 	if filePath != "" {
 		file, err := os.OpenFile(filePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
 		if err != nil {
-			return domain.URL{}, err
+			err = os.Mkdir(strings.Split(filePath, "/")[0], 0777)
+			if err != nil {
+				println(err.Error())
+				return domain.URL{}, err
+			}
+			file, err = os.OpenFile(filePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
+			if err != nil {
+				return domain.URL{}, err
+			}
 		}
 
 		data, err := json.Marshal(url)
