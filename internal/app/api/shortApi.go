@@ -41,7 +41,7 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 		byteString = fmt.Sprintf("%x", hash)
 
 		http.SetCookie(c.Writer, &http.Cookie{
-			Name:     "id",
+			Name:     "Authorization",
 			Value:    byteString,
 			Expires:  time.Now().Add(time.Hour * 24),
 			HttpOnly: true,
@@ -127,7 +127,7 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 }
 
 func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
-	cookie, err := c.Request.Cookie("id")
+	cookie, err := c.Request.Cookie("Authorization")
 	println(c.GetHeader("Authorization"))
 	println(c.GetHeader("Authorization"))
 	println(c.GetHeader("Authorization"))
