@@ -64,7 +64,7 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 		dst := aesgcm.Seal(nil, nonce, []byte(id.String()), nil) // зашифровываем
 
-		byteString := fmt.Sprintf("%x\n", dst)
+		byteString := fmt.Sprintf("%x", dst)
 
 		http.SetCookie(c.Writer, &http.Cookie{
 			Name:     "id",
