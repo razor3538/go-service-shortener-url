@@ -1,11 +1,19 @@
 package api
 
 import (
-	"example.com/m/v2/services"
-	"example.com/m/v2/tools"
+	"encoding/json"
+
 	"github.com/gin-gonic/gin"
+
 	"io"
+
 	"net/http"
+
+	"example.com/m/v2/internal/app/models"
+
+	"example.com/m/v2/services"
+	
+	"example.com/m/v2/tools"
 )
 
 type ShortURLAPI struct{}
@@ -17,9 +25,11 @@ func NewShortURLAPI() *ShortURLAPI {
 var urlService = services.NewURLService()
 
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
-	b, err := io.ReadAll(c.Request.Body)
+	var reader = c.Request.Body
+
+	b, err := io.ReadAll(reader)
 	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -33,6 +43,36 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	}
 	c.Writer.WriteHeader(http.StatusCreated)
 	c.Writer.Write([]byte(urlModel.ShortURL))
+}
+
+func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
+	var body models.URLRequestModel
+
+	if err := tools.RequestBinderBody(&body, c); err != nil {
+		return
+	}
+
+	urlModel, err := urlService.GetByFullURL(body.URL)
+
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+
+	jsonModel, err := json.Marshal(gin.H{
+		"result": urlModel.ShortURL,
+	})
+
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+
+	println(jsonModel)
+
+	c.JSON(http.StatusCreated, gin.H{
+		"result": urlModel.ShortURL,
+	})
 }
 
 func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {

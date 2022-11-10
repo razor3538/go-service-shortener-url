@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"example.com/m/v2/config"
 	"example.com/m/v2/domain"
 	"example.com/m/v2/repositories"
 	"github.com/speps/go-hashids"
@@ -17,12 +18,14 @@ func NewURLService() *URLService {
 var geolocationRepo = repositories.NewURLRepo()
 
 func (us *URLService) Save(urlModel string) (domain.URL, error) {
+	var address = config.Env.Address
+
 	var urlEntity domain.URL
 
 	_, err := url.ParseRequestURI(urlModel)
 
 	if err != nil {
-		return domain.URL{}, errors.New("не валидный URL")
+		return domain.URL{}, errors.New(urlModel)
 	}
 
 	hd := hashids.NewData()
@@ -36,8 +39,12 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 
 	id, _ := h.Encode([]int{1, 2, 3})
 
-	urlEntity.ShortURL = "http://localhost:8080/" + id
+	urlEntity.ShortURL = "http://" + address + "/" + id
 	urlEntity.FullURL = urlModel
+
+	println(address)
+	println(address)
+	println(address)
 
 	result, err := geolocationRepo.Save(urlEntity)
 	if err != nil {
@@ -48,7 +55,29 @@ func (us *URLService) Save(urlModel string) (domain.URL, error) {
 }
 
 func (us *URLService) Get(id string) (domain.URL, error) {
-	result, err := geolocationRepo.Get("http://localhost:8080/" + id)
+	var address = config.Env.Address
+
+	result, err := geolocationRepo.Get("http://" + address + "/" + id)
+	if err != nil {
+		return domain.URL{}, err
+	}
+
+	return result, nil
+}
+
+func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
+	result, err := geolocationRepo.GetByFullURL(url)
+
+	if result.FullURL == "" {
+		urlModel, err := us.Save(url)
+		if err != nil {
+			return domain.URL{}, err
+		}
+		result, err = geolocationRepo.GetByFullURL(urlModel.FullURL)
+		if err != nil {
+			return domain.URL{}, err
+		}
+	}
 	if err != nil {
 		return domain.URL{}, err
 	}

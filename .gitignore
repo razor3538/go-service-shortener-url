@@ -21,3 +21,6 @@ vendor/
 # IDEs directories
 .idea
 .vscode
+.env.example
+.env
+gorm.db

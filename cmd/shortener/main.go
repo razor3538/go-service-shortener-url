@@ -1,11 +1,18 @@
 package main
 
-import "example.com/m/v2/routes"
+import (
+	"example.com/m/v2/config"
+	"example.com/m/v2/routes"
+)
 
 func main() {
+	config.CheckFlagEnv()
+
+	address := config.Env.Address
+
 	r := routes.SetupRouter()
 
-	if err := r.Run(":8080"); err != nil {
+	if err := r.Run(address); err != nil {
 		panic(err)
 	}
 }
