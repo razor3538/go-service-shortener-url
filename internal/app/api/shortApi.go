@@ -149,7 +149,8 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 	cookie, err := c.Request.Cookie("id")
 	if err != nil {
-		http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
+		println(err.Error())
+		tools.CreateError(http.StatusNoContent, err, c)
 		return
 	}
 	userId := cookie.Value

@@ -90,5 +90,9 @@ func (us *URLService) GetByUserID(userId string) ([]models.FullURL, error) {
 		return []models.FullURL{}, err
 	}
 
+	if len(result) == 0 {
+		return []models.FullURL{}, errors.New("no content")
+	}
+
 	return result, nil
 }
