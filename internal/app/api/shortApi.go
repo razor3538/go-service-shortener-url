@@ -31,8 +31,9 @@ var urlService = services.NewURLService()
 
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	var reader = c.Request.Body
+	var userId string
+
 	var _, err = c.Cookie("id")
-	var byteString string
 	if err != nil {
 		var id = uuid.New()
 
@@ -63,7 +64,7 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 		dst := aesgcm.Seal(nil, nonce, []byte(id.String()), nil) // зашифровываем
 
-		byteString = fmt.Sprintf("%x\n", dst)
+		byteString := fmt.Sprintf("%x\n", dst)
 
 		http.SetCookie(c.Writer, &http.Cookie{
 			Name:     "id",
@@ -72,13 +73,14 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 			HttpOnly: true,
 			Secure:   false,
 		})
+		userId = ""
 	} else {
 		cookie, err := c.Request.Cookie("id")
 		if err != nil {
 			http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		byteString = cookie.Value
+		userId = cookie.Value
 	}
 
 	b, err := io.ReadAll(reader)
@@ -89,9 +91,7 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 	urlString := string(b)
 
-	println(byteString)
-
-	urlModel, err := urlService.Save(urlString, byteString)
+	urlModel, err := urlService.Save(urlString, userId)
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)

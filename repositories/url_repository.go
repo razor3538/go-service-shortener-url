@@ -84,13 +84,5 @@ func (ur *URLRepo) GetByUserID(id string) ([]models.FullURL, error) {
 	if err := config.DB.Model(&domain.URL{}).Where("user_id = ?", id).Pluck("full_url, short_url", &url).Error; err != nil {
 		return []models.FullURL{}, err
 	}
-	//if err := config.DB.
-	//	Table("urls as u").
-	//	Select("u.full_url, u.short_url").
-	//	Where("u.user_id = ?", id+"\n").
-	//	Find(&url).
-	//	Error; err != nil {
-	//	return []domain.URL{}, err
-	//}
 	return url, nil
 }

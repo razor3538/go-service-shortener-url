@@ -16,7 +16,7 @@ func NewURLService() *URLService {
 	return &URLService{}
 }
 
-var geolocationRepo = repositories.NewURLRepo()
+var urlRepo = repositories.NewURLRepo()
 
 func (us *URLService) Save(urlModel string, userId string) (domain.URL, error) {
 	var address = config.Env.Address
@@ -44,7 +44,7 @@ func (us *URLService) Save(urlModel string, userId string) (domain.URL, error) {
 	urlEntity.FullURL = urlModel
 	urlEntity.UserID = userId
 
-	result, err := geolocationRepo.Save(urlEntity)
+	result, err := urlRepo.Save(urlEntity)
 	if err != nil {
 		return domain.URL{}, err
 	}
@@ -55,7 +55,7 @@ func (us *URLService) Save(urlModel string, userId string) (domain.URL, error) {
 func (us *URLService) Get(id string) (domain.URL, error) {
 	var address = config.Env.Address
 
-	result, err := geolocationRepo.Get("http://" + address + "/" + id)
+	result, err := urlRepo.Get("http://" + address + "/" + id)
 	if err != nil {
 		return domain.URL{}, err
 	}
@@ -64,14 +64,14 @@ func (us *URLService) Get(id string) (domain.URL, error) {
 }
 
 func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
-	result, err := geolocationRepo.GetByFullURL(url)
+	result, err := urlRepo.GetByFullURL(url)
 
 	if result.FullURL == "" {
 		urlModel, err := us.Save(url, "")
 		if err != nil {
 			return domain.URL{}, err
 		}
-		result, err = geolocationRepo.GetByFullURL(urlModel.FullURL)
+		result, err = urlRepo.GetByFullURL(urlModel.FullURL)
 		if err != nil {
 			return domain.URL{}, err
 		}
@@ -84,7 +84,7 @@ func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
 }
 
 func (us *URLService) GetByUserID(userId string) ([]models.FullURL, error) {
-	result, err := geolocationRepo.GetByUserID(userId)
+	result, err := urlRepo.GetByUserID(userId)
 
 	if err != nil {
 		return []models.FullURL{}, err
