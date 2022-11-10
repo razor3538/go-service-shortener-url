@@ -21,5 +21,7 @@ func SetupRouter() *gin.Engine {
 
 	r.GET("/:id", shortenAPI.GetFullURL)
 
+	r.GET("/api/user/urls", shortenAPI.GetByUserID)
+
 	return r
 }

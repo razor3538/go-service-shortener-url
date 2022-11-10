@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"example.com/m/v2/config"
 	"example.com/m/v2/domain"
+	"example.com/m/v2/internal/app/models"
 	"os"
 	"strings"
 )
@@ -74,5 +75,22 @@ func (ur *URLRepo) GetByFullURL(id string) (domain.URL, error) {
 		Error; err != nil {
 		return domain.URL{}, err
 	}
+	return url, nil
+}
+
+func (ur *URLRepo) GetByUserID(id string) ([]models.FullURL, error) {
+	var url []models.FullURL
+	println(id)
+	if err := config.DB.Model(&domain.URL{}).Where("user_id = ?", id).Pluck("full_url, short_url", &url).Error; err != nil {
+		return []models.FullURL{}, err
+	}
+	//if err := config.DB.
+	//	Table("urls as u").
+	//	Select("u.full_url, u.short_url").
+	//	Where("u.user_id = ?", id+"\n").
+	//	Find(&url).
+	//	Error; err != nil {
+	//	return []domain.URL{}, err
+	//}
 	return url, nil
 }
