@@ -1,13 +1,9 @@
 package api
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/rand"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"time"
 
 	"io"
@@ -32,39 +28,17 @@ var urlService = services.NewURLService()
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	var reader = c.Request.Body
 	var userId string
+	var byteString string
 
 	var _, err = c.Cookie("id")
 	if err != nil {
-		var id = uuid.New()
-
-		key, err := generateRandom(2 * aes.BlockSize) // ключ шифрования
+		var hash, err = tools.HashCookie()
 		if err != nil {
-			fmt.Printf("error: %v\n", err)
+			http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		aesblock, err := aes.NewCipher(key)
-		if err != nil {
-			fmt.Printf("error: %v\n", err)
-			return
-		}
-
-		aesgcm, err := cipher.NewGCM(aesblock)
-		if err != nil {
-			fmt.Printf("error: %v\n", err)
-			return
-		}
-
-		// создаём вектор инициализации
-		nonce, err := generateRandom(aesgcm.NonceSize())
-		if err != nil {
-			fmt.Printf("error: %v\n", err)
-			return
-		}
-
-		dst := aesgcm.Seal(nil, nonce, []byte(id.String()), nil) // зашифровываем
-
-		byteString := fmt.Sprintf("%x", dst)
+		byteString = fmt.Sprintf("%x", hash)
 
 		http.SetCookie(c.Writer, &http.Cookie{
 			Name:     "id",
@@ -74,6 +48,9 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 			Secure:   false,
 		})
 		userId = ""
+
+		c.Writer.Header().Set("Authorization", byteString)
+
 	} else {
 		cookie, err := c.Request.Cookie("id")
 		if err != nil {
@@ -81,6 +58,8 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 			return
 		}
 		userId = cookie.Value
+
+		c.Writer.Header().Set("Authorization", userId)
 	}
 
 	b, err := io.ReadAll(reader)
@@ -98,6 +77,7 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 		return
 	}
 	c.Writer.WriteHeader(http.StatusCreated)
+
 	c.Writer.Write([]byte(urlModel.ShortURL))
 }
 
@@ -147,6 +127,11 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 }
 
 func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
+	header := c.GetHeader("Authorization")
+	println(header)
+	println(header)
+	println(header)
+	println(header)
 	cookie, err := c.Request.Cookie("id")
 	if err != nil {
 		println(err.Error())
@@ -163,14 +148,4 @@ func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, urlModel)
-}
-
-func generateRandom(size int) ([]byte, error) {
-	b := make([]byte, size)
-	_, err := rand.Read(b)
-	if err != nil {
-		return nil, err
-	}
-
-	return b, nil
 }
