@@ -128,6 +128,11 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 
 func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 	cookie, err := c.Request.Cookie("id")
+	println(c.GetHeader("Authorization"))
+	println(c.GetHeader("Authorization"))
+	println(c.GetHeader("Authorization"))
+	println(c.GetHeader("Authorization"))
+
 	if err != nil {
 		println("dasdas")
 		println(err.Error())
