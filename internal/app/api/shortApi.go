@@ -147,9 +147,7 @@ func (sua *ShortURLAPI) SaveMany(c *gin.Context) {
 		return
 	}
 
-	c.Writer.WriteHeader(http.StatusCreated)
-
-	c.JSON(http.StatusOK, urlModel)
+	c.JSON(http.StatusCreated, urlModel)
 }
 
 func (sua *ShortURLAPI) Ping(c *gin.Context) {
