@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"time"
-
 	"io"
 
 	"net/http"
@@ -40,16 +38,9 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 		byteString = fmt.Sprintf("%x", hash)
 
-		http.SetCookie(c.Writer, &http.Cookie{
-			Name:     "id",
-			Value:    byteString,
-			Expires:  time.Now().Add(time.Hour * 24),
-			HttpOnly: true,
-			Secure:   false,
-		})
 		userId = byteString
 
-		c.Writer.Header().Set("Authorization", byteString)
+		c.Writer.Header().Set("Authorization", userId)
 
 	} else {
 		userId = headerToken
