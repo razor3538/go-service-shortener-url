@@ -16,7 +16,7 @@ var DB *gorm.DB
 
 func InitBD() {
 	err := initPgSQL()
-	println(err.Error())
+
 	if err != nil {
 		println("подключаемся в склайт")
 		initMySQL()
