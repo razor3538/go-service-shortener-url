@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"example.com/m/v2/config"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
@@ -59,6 +60,13 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 	urlModel, err := urlService.Save(urlString, userID)
 
+	if err != nil && urlModel.FullURL != "" {
+		c.Writer.WriteHeader(http.StatusConflict)
+
+		c.Writer.Write([]byte(urlModel.ShortURL))
+		return
+	}
+
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
@@ -76,6 +84,13 @@ func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
 	}
 
 	urlModel, err := urlService.GetByFullURL(body.URL)
+
+	if err != nil && urlModel.FullURL != "" {
+		c.JSON(http.StatusConflict, gin.H{
+			"result": urlModel.ShortURL,
+		})
+		return
+	}
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
@@ -130,4 +145,39 @@ func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, urlModel)
+}
+
+func (sua *ShortURLAPI) SaveMany(c *gin.Context) {
+	var body []models.SaveBatchURLRequest
+
+	if err := tools.RequestBinderBody(&body, c); err != nil {
+		return
+	}
+
+	urlModel, err := urlService.SaveMany(body)
+
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+
+	c.JSON(http.StatusCreated, urlModel)
+}
+
+func (sua *ShortURLAPI) Ping(c *gin.Context) {
+	if config.Env.BdConnection != "" {
+		sqlDB, err := config.DB.DB()
+		if err != nil {
+			tools.CreateError(http.StatusInternalServerError, err, c)
+			return
+		}
+		if err = sqlDB.Ping(); err != nil {
+			err := sqlDB.Close()
+			if err != nil {
+				tools.CreateError(http.StatusInternalServerError, err, c)
+				return
+			}
+		}
+		c.Writer.WriteHeader(http.StatusOK)
+	}
 }
