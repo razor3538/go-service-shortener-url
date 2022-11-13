@@ -119,6 +119,10 @@ func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 
 	urlModel, err := urlService.GetByUserID(userId)
 
+	println(len(urlModel))
+	println(len(urlModel))
+	println(len(urlModel))
+
 	if err != nil || len(urlModel) == 0 {
 		tools.CreateError(http.StatusNoContent, err, c)
 		return
