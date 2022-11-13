@@ -120,6 +120,7 @@ func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 	urlModel, err := urlService.GetByUserID(userId)
 
 	println(len(urlModel))
+	println(headerToken)
 	println(len(urlModel))
 	println(len(urlModel))
 
