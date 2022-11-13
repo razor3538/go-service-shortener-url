@@ -14,12 +14,8 @@ import (
 // DB сущность базы данных
 var DB *gorm.DB
 
-func init() {
+func InitBD() {
 	err := initPgSQL()
-	println(err.Error())
-	println(err.Error())
-	println(err.Error())
-	println(err.Error())
 	println(err.Error())
 	if err != nil {
 		println("подключаемся в склайт")

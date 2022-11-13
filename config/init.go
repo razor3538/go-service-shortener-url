@@ -36,11 +36,8 @@ func CheckFlagEnv() {
 	}
 
 	if os.Getenv("DATABASE_DSN") != "" {
-		println("получил из енви -> " + os.Getenv("DATABASE_DSN"))
-
 		dbConnection = os.Getenv("DATABASE_DSN")
 	} else {
-		println("не получил из енви")
 		dbConnection = ""
 	}
 
@@ -64,11 +61,8 @@ func CheckFlagEnv() {
 	}
 
 	if *flagDSN != "" {
-		println("получил из флага -> " + *flagDSN)
 
 		dbConnection = *flagDSN
-	} else {
-		println("не получил из флага")
 	}
 
 	Env = env{
