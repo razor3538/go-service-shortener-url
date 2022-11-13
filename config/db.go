@@ -32,6 +32,10 @@ func initMySQL() {
 
 	sqlDB, err := sql.Open("sqlite3", "gorm.db")
 
+	if err != nil {
+		panic(err)
+	}
+
 	err = sqlDB.Ping()
 	if err != nil {
 		panic(err)
