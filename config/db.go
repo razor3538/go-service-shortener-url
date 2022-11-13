@@ -16,6 +16,11 @@ var DB *gorm.DB
 
 func init() {
 	err := initPgSQL()
+	println(err.Error())
+	println(err.Error())
+	println(err.Error())
+	println(err.Error())
+	println(err.Error())
 	if err != nil {
 		println("подключаемся в склайт")
 		initMySQL()
@@ -43,6 +48,11 @@ func initMySQL() {
 		panic(err)
 	}
 
+	err = sqlDB.Close()
+	if err != nil {
+		panic(err)
+	}
+
 	if filepath.Base(dirname) == "go-service-shortener-url" {
 		db, err = gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
 		if err != nil {
@@ -61,8 +71,6 @@ func initMySQL() {
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println("You connected to your database.")
 }
 
 func initPgSQL() error {
