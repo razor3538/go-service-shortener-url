@@ -7,6 +7,7 @@ import (
 	"example.com/m/v2/internal/app/models"
 	"example.com/m/v2/repositories"
 	"example.com/m/v2/tools"
+	"github.com/google/uuid"
 	"net/url"
 )
 
@@ -38,6 +39,7 @@ func (us *URLService) Save(urlModel string, userID string) (domain.URL, error) {
 	urlEntity.ShortURL = "http://" + address + "/" + id
 	urlEntity.FullURL = urlModel
 	urlEntity.UserID = userID
+	urlEntity.ID = uuid.New().String()
 
 	result, err := urlRepo.Save(urlEntity)
 	if err != nil {
