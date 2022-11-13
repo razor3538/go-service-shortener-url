@@ -116,7 +116,7 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 	headerToken := c.GetHeader("Authorization")
 
-	if headerToken != "" {
+	if headerToken == "" {
 		tools.CreateError(http.StatusNoContent, errors.New("пустой токен"), c)
 		return
 	}
