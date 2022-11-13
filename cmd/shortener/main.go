@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "database/sql"
 	"example.com/m/v2/config"
 	"example.com/m/v2/routes"
 )

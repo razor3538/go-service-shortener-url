@@ -1,6 +1,7 @@
 package config
 
 import (
+	"database/sql"
 	_ "database/sql"
 	"example.com/m/v2/domain"
 	"fmt"
@@ -30,6 +31,13 @@ func initMySQL() {
 	}
 
 	var db *gorm.DB
+
+	sqlDB, err := sql.Open("sqlite3", "gorm.db")
+
+	err = sqlDB.Ping()
+	if err != nil {
+		panic(err)
+	}
 
 	if filepath.Base(dirname) == "go-service-shortener-url" {
 		db, err = gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
