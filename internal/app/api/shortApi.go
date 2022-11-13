@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"example.com/m/v2/config"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
@@ -130,4 +131,22 @@ func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, urlModel)
+}
+
+func (sua *ShortURLAPI) Ping(c *gin.Context) {
+	if config.Env.BdConnection != "" {
+		sqlDb, err := config.DB.DB()
+		if err != nil {
+			tools.CreateError(http.StatusInternalServerError, err, c)
+			return
+		}
+		if err = sqlDb.Ping(); err != nil {
+			err := sqlDb.Close()
+			if err != nil {
+				tools.CreateError(http.StatusInternalServerError, err, c)
+				return
+			}
+		}
+		c.Writer.WriteHeader(http.StatusOK)
+	}
 }

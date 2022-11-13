@@ -25,5 +25,7 @@ func SetupRouter() *gin.Engine {
 
 	r.GET("/api/user/urls", shortenAPI.GetByUserID)
 
+	r.GET("/ping", shortenAPI.)
+
 	return r
 }
