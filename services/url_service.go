@@ -83,8 +83,8 @@ func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
 	return result, nil
 }
 
-func (us *URLService) GetByUserID(userId string) ([]models.FullURL, error) {
-	result, err := urlRepo.GetByUserID(userId)
+func (us *URLService) GetByUserID(userID string) ([]models.FullURL, error) {
+	result, err := urlRepo.GetByUserID(userID)
 
 	if err != nil {
 		return []models.FullURL{}, err
