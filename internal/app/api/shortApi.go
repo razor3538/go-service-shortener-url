@@ -147,9 +147,7 @@ func (sua *ShortURLAPI) SaveMany(c *gin.Context) {
 		return
 	}
 
-	//c.JSON(http.StatusCreated, gin.H{
-	//	"result": body,
-	//})
+	c.Writer.WriteHeader(http.StatusCreated)
 
 	c.JSON(http.StatusOK, urlModel)
 }
