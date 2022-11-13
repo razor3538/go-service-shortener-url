@@ -60,6 +60,13 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 	urlModel, err := urlService.Save(urlString, userID)
 
+	if err != nil && urlModel.FullURL != "" {
+		c.Writer.WriteHeader(http.StatusConflict)
+
+		c.Writer.Write([]byte(urlModel.ShortURL))
+		return
+	}
+
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
@@ -77,6 +84,13 @@ func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
 	}
 
 	urlModel, err := urlService.GetByFullURL(body.URL)
+
+	if err != nil && urlModel.FullURL != "" {
+		c.JSON(http.StatusConflict, gin.H{
+			"result": urlModel.ShortURL,
+		})
+		return
+	}
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)

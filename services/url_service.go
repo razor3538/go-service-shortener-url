@@ -42,6 +42,10 @@ func (us *URLService) Save(urlModel string, userID string) (domain.URL, error) {
 	urlEntity.ID = uuid.New().String()
 
 	result, err := urlRepo.Save(urlEntity)
+	if result.FullURL != "" && err != nil {
+		return result, err
+	}
+
 	if err != nil {
 		return domain.URL{}, err
 	}
@@ -72,7 +76,10 @@ func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
 		if err != nil {
 			return domain.URL{}, err
 		}
+	} else {
+		return result, errors.New("урл уже сохранен")
 	}
+
 	if err != nil {
 		return domain.URL{}, err
 	}
