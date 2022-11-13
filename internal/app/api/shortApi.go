@@ -63,7 +63,7 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	if err != nil && urlModel.FullURL != "" {
 		c.Writer.WriteHeader(http.StatusConflict)
 
-		c.Writer.Write([]byte(urlModel.FullURL))
+		c.Writer.Write([]byte(urlModel.ShortURL))
 		return
 	}
 
