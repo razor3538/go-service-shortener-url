@@ -56,8 +56,8 @@ func (ur *URLRepo) SaveMany(urls []domain.URL) ([]domain.URL, error) {
 	var urlsResponse []domain.URL
 	var urlsID []string
 
-	for _, urlId := range urls {
-		urlsID = append(urlsID, urlId.ID)
+	for _, urlID := range urls {
+		urlsID = append(urlsID, urlID.ID)
 	}
 
 	if err := config.DB.Create(&urls).Error; err != nil {
