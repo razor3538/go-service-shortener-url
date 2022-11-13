@@ -76,6 +76,13 @@ func initMySQL() {
 func initPgSQL() error {
 	var db *gorm.DB
 
+	println(Env.BdConnection)
+	println(Env.BdConnection)
+	println(Env.BdConnection)
+	println(Env.BdConnection)
+	println(Env.BdConnection)
+	println(Env.BdConnection)
+
 	db, err := gorm.Open(postgres.Open(Env.BdConnection), &gorm.Config{})
 
 	if err != nil {
