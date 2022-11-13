@@ -61,6 +61,7 @@ func CheckFlagEnv() {
 	}
 
 	if *flagDSN != "" {
+
 		dbConnection = *flagDSN
 	}
 

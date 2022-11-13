@@ -1,12 +1,15 @@
 package services
 
 import (
+	"example.com/m/v2/config"
 	"example.com/m/v2/domain"
 	"reflect"
 	"testing"
 )
 
 func TestURLService_Save(t *testing.T) {
+	config.InitBD()
+
 	type args struct {
 		urlModel string
 	}

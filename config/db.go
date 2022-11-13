@@ -14,12 +14,14 @@ import (
 // DB сущность базы данных
 var DB *gorm.DB
 
-func init() {
-	if Env.BdConnection != "" {
-		initPgSQL()
-	} else {
+func InitBD() {
+	err := initPgSQL()
+
+	if err != nil {
 		initMySQL()
 	}
+
+	fmt.Println("You connected to your database.")
 }
 
 func initMySQL() {
@@ -37,6 +39,11 @@ func initMySQL() {
 	}
 
 	err = sqlDB.Ping()
+	if err != nil {
+		panic(err)
+	}
+
+	err = sqlDB.Close()
 	if err != nil {
 		panic(err)
 	}
@@ -59,25 +66,23 @@ func initMySQL() {
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println("You connected to your database.")
 }
 
-func initPgSQL() {
+func initPgSQL() error {
 	var db *gorm.DB
 
 	db, err := gorm.Open(postgres.Open(Env.BdConnection), &gorm.Config{})
 
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	DB = db
 
 	err = db.Table("urls").AutoMigrate(&domain.URL{})
 	if err != nil {
-		panic(err)
+		return err
 	}
 
-	fmt.Println("You connected to your database.")
+	return nil
 }
