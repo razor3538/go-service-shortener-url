@@ -26,7 +26,7 @@ var urlService = services.NewURLService()
 
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	var reader = c.Request.Body
-	var userId string
+	var userID string
 	var byteString string
 
 	var headerToken = c.GetHeader("Authorization")
@@ -39,14 +39,14 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 		byteString = fmt.Sprintf("%x", hash)
 
-		userId = byteString
+		userID = byteString
 
-		c.Writer.Header().Set("Authorization", userId)
+		c.Writer.Header().Set("Authorization", userID)
 
 	} else {
-		userId = headerToken
+		userID = headerToken
 
-		c.Writer.Header().Set("Authorization", userId)
+		c.Writer.Header().Set("Authorization", userID)
 	}
 
 	b, err := io.ReadAll(reader)
@@ -57,7 +57,7 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 	urlString := string(b)
 
-	urlModel, err := urlService.Save(urlString, userId)
+	urlModel, err := urlService.Save(urlString, userID)
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
@@ -120,9 +120,9 @@ func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 		tools.CreateError(http.StatusNoContent, errors.New("пустой токен"), c)
 		return
 	}
-	userId := headerToken
+	userID := headerToken
 
-	urlModel, err := urlService.GetByUserID(userId)
+	urlModel, err := urlService.GetByUserID(userID)
 
 	if err != nil {
 		tools.CreateError(http.StatusNoContent, err, c)

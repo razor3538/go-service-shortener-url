@@ -18,7 +18,7 @@ func NewURLService() *URLService {
 
 var urlRepo = repositories.NewURLRepo()
 
-func (us *URLService) Save(urlModel string, userId string) (domain.URL, error) {
+func (us *URLService) Save(urlModel string, userID string) (domain.URL, error) {
 	var address = config.Env.Address
 
 	var urlEntity domain.URL
@@ -42,7 +42,7 @@ func (us *URLService) Save(urlModel string, userId string) (domain.URL, error) {
 
 	urlEntity.ShortURL = "http://" + address + "/" + id
 	urlEntity.FullURL = urlModel
-	urlEntity.UserID = userId
+	urlEntity.UserID = userID
 
 	result, err := urlRepo.Save(urlEntity)
 	if err != nil {
