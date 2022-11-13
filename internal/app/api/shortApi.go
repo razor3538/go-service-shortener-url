@@ -135,13 +135,13 @@ func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 
 func (sua *ShortURLAPI) Ping(c *gin.Context) {
 	if config.Env.BdConnection != "" {
-		sqlDb, err := config.DB.DB()
+		sqlDB, err := config.DB.DB()
 		if err != nil {
 			tools.CreateError(http.StatusInternalServerError, err, c)
 			return
 		}
-		if err = sqlDb.Ping(); err != nil {
-			err := sqlDb.Close()
+		if err = sqlDB.Ping(); err != nil {
+			err := sqlDB.Close()
 			if err != nil {
 				tools.CreateError(http.StatusInternalServerError, err, c)
 				return
