@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"encoding/json"
+	"errors"
 	"example.com/m/v2/config"
 	"example.com/m/v2/domain"
 	"example.com/m/v2/internal/app/models"
@@ -16,6 +17,21 @@ func NewURLRepo() *URLRepo {
 }
 
 func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
+	var existingUrl domain.URL
+
+	if err := config.DB.
+		Table("urls as u").
+		Select("u.*").
+		Where("u.full_url = ?", url.FullURL).
+		Scan(&existingUrl).
+		Error; err != nil {
+		return domain.URL{}, err
+	}
+
+	if existingUrl.FullURL != "" {
+		return existingUrl, errors.New("урл уже сохранен")
+	}
+
 	if err := config.DB.
 		Create(&url).
 		Error; err != nil {
@@ -103,7 +119,6 @@ func (ur *URLRepo) GetByFullURL(id string) (domain.URL, error) {
 
 func (ur *URLRepo) GetByUserID(id string) ([]models.FullURL, error) {
 	var url []models.FullURL
-	println(id)
 	if err := config.DB.Model(&domain.URL{}).Where("user_id = ?", id).Pluck("full_url, short_url", &url).Error; err != nil {
 		return []models.FullURL{}, err
 	}
