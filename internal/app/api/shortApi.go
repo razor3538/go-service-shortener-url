@@ -117,16 +117,9 @@ func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 
 	userId := headerToken
 
-	println("userId")
-	println(userId)
-	println(userId)
-	println(userId)
-
 	urlModel, err := urlService.GetByUserID(userId)
 
-	println(len(urlModel))
-
-	if err != nil {
+	if err != nil || len(urlModel) == 0 {
 		tools.CreateError(http.StatusNoContent, err, c)
 		return
 	}
