@@ -30,7 +30,7 @@ func (us *URLService) Save(urlModel string, userID string) (domain.URL, error) {
 		return domain.URL{}, errors.New(urlModel)
 	}
 
-	id, err := tools.ShortenUrl(urlModel)
+	id, err := tools.ShortenURL(urlModel)
 
 	if err != nil {
 		return domain.URL{}, errors.New(urlModel)
@@ -85,7 +85,7 @@ func (us *URLService) SaveMany(urls []models.SaveBatchURLRequest) ([]models.Save
 	var response []models.SaveBatchURLResponse
 
 	for i := range urls {
-		tmp, err := tools.ShortenUrl(urls[i].FullURL)
+		tmp, err := tools.ShortenURL(urls[i].FullURL)
 		if err != nil {
 			return []models.SaveBatchURLResponse{}, err
 		}

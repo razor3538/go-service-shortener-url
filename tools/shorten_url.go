@@ -4,7 +4,7 @@ import (
 	"github.com/speps/go-hashids"
 )
 
-func ShortenUrl(urlModel string) (string, error) {
+func ShortenURL(urlModel string) (string, error) {
 	hd := hashids.NewData()
 	hd.Salt = urlModel
 

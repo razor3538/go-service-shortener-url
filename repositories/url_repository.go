@@ -54,10 +54,10 @@ func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
 
 func (ur *URLRepo) SaveMany(urls []domain.URL) ([]domain.URL, error) {
 	var urlsResponse []domain.URL
-	var urlsId []string
+	var urlsID []string
 
 	for _, urlId := range urls {
-		urlsId = append(urlsId, urlId.ID)
+		urlsID = append(urlsID, urlId.ID)
 	}
 
 	if err := config.DB.Create(&urls).Error; err != nil {
@@ -67,7 +67,7 @@ func (ur *URLRepo) SaveMany(urls []domain.URL) ([]domain.URL, error) {
 	if err := config.DB.
 		Table("urls as u").
 		Select("u.*").
-		Where("u.id in ?", urlsId).
+		Where("u.id in ?", urlsID).
 		Scan(&urlsResponse).Error; err != nil {
 		return []domain.URL{}, err
 	}
