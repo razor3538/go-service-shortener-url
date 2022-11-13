@@ -6,7 +6,7 @@ import (
 	"example.com/m/v2/domain"
 	"example.com/m/v2/internal/app/models"
 	"example.com/m/v2/repositories"
-	"github.com/speps/go-hashids"
+	"example.com/m/v2/tools"
 	"net/url"
 )
 
@@ -29,16 +29,11 @@ func (us *URLService) Save(urlModel string, userID string) (domain.URL, error) {
 		return domain.URL{}, errors.New(urlModel)
 	}
 
-	hd := hashids.NewData()
-	hd.Salt = urlModel
-
-	h, err := hashids.NewWithData(hd)
+	id, err := tools.ShortenUrl(urlModel)
 
 	if err != nil {
-		return domain.URL{}, err
+		return domain.URL{}, errors.New(urlModel)
 	}
-
-	id, _ := h.Encode([]int{1, 2, 3})
 
 	urlEntity.ShortURL = "http://" + address + "/" + id
 	urlEntity.FullURL = urlModel
@@ -81,6 +76,38 @@ func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
 	}
 
 	return result, nil
+}
+
+func (us *URLService) SaveMany(urls []models.SaveBatchURLRequest) ([]models.SaveBatchURLResponse, error) {
+	var domainUrls []domain.URL
+	var response []models.SaveBatchURLResponse
+
+	for i := range urls {
+		tmp, err := tools.ShortenUrl(urls[i].FullURL)
+		if err != nil {
+			return []models.SaveBatchURLResponse{}, err
+		}
+		domainUrls = append(domainUrls, domain.URL{
+			Base:     domain.Base{ID: urls[i].ID},
+			FullURL:  urls[i].FullURL,
+			ShortURL: "http://" + config.Env.Address + "/" + tmp,
+			UserID:   "",
+		})
+	}
+
+	repositoriesResponse, err := urlRepo.SaveMany(domainUrls)
+	if err != nil {
+		return []models.SaveBatchURLResponse{}, err
+	}
+
+	for i := range repositoriesResponse {
+		response = append(response, models.SaveBatchURLResponse{
+			ID:       repositoriesResponse[i].ID,
+			ShortURL: repositoriesResponse[i].ShortURL,
+		})
+	}
+
+	return response, nil
 }
 
 func (us *URLService) GetByUserID(userID string) ([]models.FullURL, error) {

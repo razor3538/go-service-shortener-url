@@ -133,6 +133,27 @@ func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 	c.JSON(http.StatusOK, urlModel)
 }
 
+func (sua *ShortURLAPI) SaveMany(c *gin.Context) {
+	var body []models.SaveBatchURLRequest
+
+	if err := tools.RequestBinderBody(&body, c); err != nil {
+		return
+	}
+
+	urlModel, err := urlService.SaveMany(body)
+
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+
+	//c.JSON(http.StatusCreated, gin.H{
+	//	"result": body,
+	//})
+
+	c.JSON(http.StatusOK, urlModel)
+}
+
 func (sua *ShortURLAPI) Ping(c *gin.Context) {
 	if config.Env.BdConnection != "" {
 		sqlDB, err := config.DB.DB()

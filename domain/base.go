@@ -1,5 +1,5 @@
 package domain
 
 type Base struct {
-	ID int64 `gorm:"type:primaryKey" json:"id"`
+	ID string `gorm:"type:varchar" json:"correlation_id"`
 }

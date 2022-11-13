@@ -52,6 +52,29 @@ func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
 	return url, nil
 }
 
+func (ur *URLRepo) SaveMany(urls []domain.URL) ([]domain.URL, error) {
+	var urlsResponse []domain.URL
+	var urlsId []string
+
+	for _, urlId := range urls {
+		urlsId = append(urlsId, urlId.ID)
+	}
+
+	if err := config.DB.Create(&urls).Error; err != nil {
+		return []domain.URL{}, err
+	}
+
+	if err := config.DB.
+		Table("urls as u").
+		Select("u.*").
+		Where("u.id in ?", urlsId).
+		Scan(&urlsResponse).Error; err != nil {
+		return []domain.URL{}, err
+	}
+
+	return urlsResponse, nil
+}
+
 func (ur *URLRepo) Get(id string) (domain.URL, error) {
 	var url domain.URL
 	if err := config.DB.
