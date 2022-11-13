@@ -92,6 +92,8 @@ func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
 		return
 	}
 
+	println(jsonModel)
+
 	c.JSON(http.StatusCreated, gin.H{
 		"result": urlModel.ShortURL,
 	})
