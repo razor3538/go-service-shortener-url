@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
@@ -115,16 +116,15 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 	headerToken := c.GetHeader("Authorization")
 
+	if headerToken != "" {
+		tools.CreateError(http.StatusNoContent, errors.New("пустой токен"), c)
+		return
+	}
 	userId := headerToken
 
 	urlModel, err := urlService.GetByUserID(userId)
 
-	println(len(urlModel))
-	println(headerToken)
-	println(len(urlModel))
-	println(len(urlModel))
-
-	if err != nil || len(urlModel) == 0 {
+	if err != nil {
 		tools.CreateError(http.StatusNoContent, err, c)
 		return
 	}
