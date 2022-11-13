@@ -79,5 +79,7 @@ func initPgSQL() {
 		panic(err)
 	}
 
+	println("постря настроенна")
+
 	fmt.Println("You connected to your database.")
 }
