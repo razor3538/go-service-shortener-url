@@ -30,8 +30,8 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	var userId string
 	var byteString string
 
-	var _, err = c.Cookie("id")
-	if err != nil {
+	var headerToken = c.GetHeader("Authorization")
+	if headerToken == "" {
 		var hash, err = tools.HashCookie()
 		if err != nil {
 			http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
@@ -41,23 +41,18 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 		byteString = fmt.Sprintf("%x", hash)
 
 		http.SetCookie(c.Writer, &http.Cookie{
-			Name:     "Authorization",
+			Name:     "id",
 			Value:    byteString,
 			Expires:  time.Now().Add(time.Hour * 24),
 			HttpOnly: true,
 			Secure:   false,
 		})
-		userId = ""
+		userId = byteString
 
 		c.Writer.Header().Set("Authorization", byteString)
 
 	} else {
-		cookie, err := c.Request.Cookie("id")
-		if err != nil {
-			http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		userId = cookie.Value
+		userId = headerToken
 
 		c.Writer.Header().Set("Authorization", userId)
 	}
@@ -127,21 +122,14 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 }
 
 func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
-	cookie, err := c.Request.Cookie("Authorization")
-	println(c.GetHeader("Authorization"))
-	println(c.GetHeader("Authorization"))
-	println(c.GetHeader("Authorization"))
-	println(c.GetHeader("Authorization"))
+	headerToken := c.GetHeader("Authorization")
 
-	if err != nil {
-		println("dasdas")
-		println(err.Error())
-		println(err.Error())
-		println(err.Error())
-		tools.CreateError(http.StatusNoContent, err, c)
-		return
-	}
-	userId := cookie.Value
+	userId := headerToken
+
+	println("userId")
+	println(userId)
+	println(userId)
+	println(userId)
 
 	urlModel, err := urlService.GetByUserID(userId)
 
