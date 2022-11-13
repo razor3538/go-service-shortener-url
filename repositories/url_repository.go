@@ -17,19 +17,19 @@ func NewURLRepo() *URLRepo {
 }
 
 func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
-	var existingUrl domain.URL
+	var existingURL domain.URL
 
 	if err := config.DB.
 		Table("urls as u").
 		Select("u.*").
 		Where("u.full_url = ?", url.FullURL).
-		Scan(&existingUrl).
+		Scan(&existingURL).
 		Error; err != nil {
 		return domain.URL{}, err
 	}
 
-	if existingUrl.FullURL != "" {
-		return existingUrl, errors.New("урл уже сохранен")
+	if existingURL.FullURL != "" {
+		return existingURL, errors.New("урл уже сохранен")
 	}
 
 	if err := config.DB.
