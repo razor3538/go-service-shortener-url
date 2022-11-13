@@ -14,7 +14,7 @@ import (
 // DB сущность базы данных
 var DB *gorm.DB
 
-func init() {
+func InitDb() {
 	if Env.BdConnection != "" {
 		println("подключаемся в постре")
 		initPgSQL()

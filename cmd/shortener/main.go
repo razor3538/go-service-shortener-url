@@ -7,6 +7,7 @@ import (
 
 func main() {
 	config.CheckFlagEnv()
+	config.InitDb()
 
 	address := config.Env.Address
 
