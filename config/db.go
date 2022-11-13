@@ -16,8 +16,10 @@ var DB *gorm.DB
 
 func init() {
 	if Env.BdConnection != "" {
+		println("подключаемся в постре")
 		initPgSQL()
 	} else {
+		println("подключаемся в склайт")
 		initMySQL()
 	}
 }
