@@ -1,12 +1,15 @@
 package services
 
 import (
+	"example.com/m/v2/config"
 	"example.com/m/v2/domain"
 	"reflect"
 	"testing"
 )
 
 func TestURLService_Save(t *testing.T) {
+	config.InitBD()
+
 	type args struct {
 		urlModel string
 	}
@@ -38,7 +41,7 @@ func TestURLService_Save(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			us := &URLService{}
-			_, err := us.Save(tt.args.urlModel)
+			_, err := us.Save(tt.args.urlModel, "")
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Save() error = %v, wantErr %v", err, tt.wantErr)
 				return

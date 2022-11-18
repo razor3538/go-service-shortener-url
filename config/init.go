@@ -7,9 +7,10 @@ import (
 )
 
 type env struct {
-	Address  string
-	FilePath string
-	BaseURL  string
+	Address      string
+	FilePath     string
+	BaseURL      string
+	BdConnection string
 }
 
 var Env env
@@ -18,6 +19,7 @@ func CheckFlagEnv() {
 	var address string
 	var filePath string
 	var basePath string
+	var dbConnection string
 
 	_ = godotenv.Load()
 
@@ -33,9 +35,16 @@ func CheckFlagEnv() {
 		filePath = ""
 	}
 
+	if os.Getenv("DATABASE_DSN") != "" {
+		dbConnection = os.Getenv("DATABASE_DSN")
+	} else {
+		dbConnection = ""
+	}
+
 	var flagAddress = flag.String("a", "", "Server name")
 	var flagFilePath = flag.String("f", "", "File path")
 	var flagBaseURL = flag.String("b", "", "Base url dir")
+	var flagDSN = flag.String("d", "", "Base dsn connection")
 
 	flag.Parse()
 
@@ -51,9 +60,15 @@ func CheckFlagEnv() {
 		basePath = *flagBaseURL
 	}
 
+	if *flagDSN != "" {
+
+		dbConnection = *flagDSN
+	}
+
 	Env = env{
-		Address:  address,
-		FilePath: filePath,
-		BaseURL:  basePath,
+		Address:      address,
+		FilePath:     filePath,
+		BaseURL:      basePath,
+		BdConnection: dbConnection,
 	}
 }
