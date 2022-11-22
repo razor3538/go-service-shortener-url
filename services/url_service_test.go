@@ -29,7 +29,7 @@ func TestURLService_Save(t *testing.T) {
 		},
 		{
 			name:    "invalid test",
-			args:    args{urlModel: "https//google.com"},
+			args:    args{urlModel: "https//googeqwlecom"},
 			wantErr: true,
 		},
 		{
