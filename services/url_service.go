@@ -49,6 +49,7 @@ func (us *URLService) Save(urlModel string, userID string) (domain.URL, error) {
 	urlEntity.FullURL = urlModel
 	urlEntity.UserID = userID
 	urlEntity.ID = uuid.New().String()
+	urlEntity.StringShortID = id
 
 	result, err := urlRepo.Save(urlEntity)
 	if result.FullURL != "" && err != nil {

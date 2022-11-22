@@ -10,7 +10,7 @@ func StringToSlice(rawString string) []string {
 			tmp = ""
 			count++
 
-			for true {
+			for {
 				if rawString[count] == '"' {
 					result = append(result, tmp)
 					break
