@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
-
 	"net/http"
 
 	"example.com/m/v2/internal/app/models"
@@ -24,6 +23,23 @@ func NewShortURLAPI() *ShortURLAPI {
 }
 
 var urlService = services.NewURLService()
+
+func (sua *ShortURLAPI) DeleteURLs(c *gin.Context) {
+	var reader = c.Request.Body
+	var headerToken = c.GetHeader("Authorization")
+
+	b, err := io.ReadAll(reader)
+	if err != nil {
+		http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	urlString := string(b)
+
+	go urlService.Delete(tools.StringToSlice(urlString), headerToken)
+
+	c.Writer.WriteHeader(http.StatusAccepted)
+}
 
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	var reader = c.Request.Body
@@ -65,12 +81,11 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 		c.Writer.Write([]byte(urlModel.ShortURL))
 		return
-	}
-
-	if err != nil {
+	} else if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
+
 	c.Writer.WriteHeader(http.StatusCreated)
 
 	c.Writer.Write([]byte(urlModel.ShortURL))
@@ -123,9 +138,13 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 		return
 	}
 
-	c.Writer.Header().Set("Location", urlModel.FullURL)
+	if urlModel.Deleted.Valid {
+		c.Writer.WriteHeader(http.StatusGone)
+	} else {
+		c.Writer.Header().Set("Location", urlModel.FullURL)
 
-	c.JSON(http.StatusTemporaryRedirect, nil)
+		c.JSON(http.StatusTemporaryRedirect, nil)
+	}
 }
 
 func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
