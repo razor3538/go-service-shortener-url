@@ -9,7 +9,6 @@ import (
 	"example.com/m/v2/tools"
 	"github.com/google/uuid"
 	"net/url"
-	"os"
 )
 
 type URLService struct{}
@@ -22,11 +21,6 @@ var urlRepo = repositories.NewURLRepo()
 
 func (us *URLService) Delete(ids []string, token string) {
 	for _, id := range ids {
-		println(token)
-		println(token)
-		if token == "" {
-			os.Exit(1)
-		}
 		err := urlRepo.DeleteURL(id, token)
 		if err != nil {
 			println(err.Error())

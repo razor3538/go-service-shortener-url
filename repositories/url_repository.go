@@ -71,7 +71,7 @@ func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
 func (ur *URLRepo) DeleteURL(id string, token string) error {
 	var tmp domain.URL
 	if err := config.DB.
-		Where("id = ? AND user_id = ?", id, token).
+		Where("id = ?", id).
 		Delete(&domain.URL{}).Scan(&tmp).
 		Error; err != nil {
 		return err
