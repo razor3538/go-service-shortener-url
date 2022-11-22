@@ -21,9 +21,9 @@ func TestURLService_Save(t *testing.T) {
 	}{
 		{
 			name: "valid test",
-			args: args{urlModel: "https://google.com"},
+			args: args{urlModel: "https://gooewqgle.com"},
 			want: domain.URL{
-				FullURL: "https://google.com",
+				FullURL: "https://gooewqgle.com",
 			},
 			wantErr: false,
 		},
