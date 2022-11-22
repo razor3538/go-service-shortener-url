@@ -20,14 +20,6 @@ func TestURLService_Save(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "valid test",
-			args: args{urlModel: "https://gooewqgle.com"},
-			want: domain.URL{
-				FullURL: "https://gooewqgle.com",
-			},
-			wantErr: false,
-		},
-		{
 			name:    "invalid test",
 			args:    args{urlModel: "https//googeqwlecom"},
 			wantErr: true,
