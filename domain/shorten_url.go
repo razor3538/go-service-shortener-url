@@ -2,8 +2,8 @@ package domain
 
 type URL struct {
 	Base
-	//FullURL  string `gorm:"type:varchar; unique"`
-	FullURL  string `gorm:"type:varchar"`
+	FullURL string `gorm:"type:varchar; unique"`
+	//FullURL  string `gorm:"type:varchar"`
 	ShortURL string `gorm:"type:varchar"`
 	UserID   string `gorm:"type:varchar"`
 }
