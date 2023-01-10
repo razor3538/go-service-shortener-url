@@ -19,6 +19,15 @@ func NewURLService() *URLService {
 
 var urlRepo = repositories.NewURLRepo()
 
+func (us *URLService) Delete(ids []string, token string) {
+	for _, id := range ids {
+		err := urlRepo.DeleteURL(id, token)
+		if err != nil {
+			println(err.Error())
+		}
+	}
+}
+
 func (us *URLService) Save(urlModel string, userID string) (domain.URL, error) {
 	var address = config.Env.Address
 
@@ -40,6 +49,7 @@ func (us *URLService) Save(urlModel string, userID string) (domain.URL, error) {
 	urlEntity.FullURL = urlModel
 	urlEntity.UserID = userID
 	urlEntity.ID = uuid.New().String()
+	urlEntity.StringShortID = id
 
 	result, err := urlRepo.Save(urlEntity)
 	if result.FullURL != "" && err != nil {

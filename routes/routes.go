@@ -19,6 +19,8 @@ func SetupRouter() *gin.Engine {
 
 	r.POST("/", shortenAPI.ShortenURL)
 
+	r.DELETE("/api/user/urls", shortenAPI.DeleteURLs)
+
 	r.POST("/api/shorten", shortenAPI.ReturnFullURL)
 
 	r.POST("/api/shorten/batch", shortenAPI.SaveMany)
