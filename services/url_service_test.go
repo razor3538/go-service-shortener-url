@@ -1,9 +1,12 @@
 package services
 
 import (
+	"bytes"
 	"example.com/m/v2/config"
 	"example.com/m/v2/domain"
 	"github.com/google/uuid"
+	"io/ioutil"
+	"net/http"
 	"reflect"
 	"testing"
 )
@@ -67,4 +70,18 @@ func BenchmarkURLService_SaveMany(b *testing.B) {
 		us := &URLService{}
 		us.Save(uuid.New().String(), "")
 	}
+}
+
+func ExampleURLService_Save() {
+	// Записываем строку в io.Reader
+	jsonBody := []byte("https://github.com/gin-contrib/pprof")
+	bodyReader := bytes.NewReader(jsonBody)
+
+	// Делаем запрос на сокращение урла
+	req, _ := http.Post("http://localhost:8080/", "application/json", bodyReader)
+
+	// Читаем полученный ответ от сервера
+	body, _ := ioutil.ReadAll(req.Body)
+
+	println(body)
 }
