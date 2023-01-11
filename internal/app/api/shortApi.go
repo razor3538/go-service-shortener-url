@@ -99,6 +99,7 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	c.Writer.Write([]byte(urlModel.ShortURL))
 }
 
+// ReturnFullURL сокращает урл полученный из JSON
 func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
 	var body models.URLRequestModel
 

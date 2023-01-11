@@ -14,6 +14,7 @@ import (
 // DB сущность базы данных
 var DB *gorm.DB
 
+// InitBD инициализирует подключение к базе данных либо MySQL либо PgSQL
 func InitBD() {
 	err := initPgSQL()
 

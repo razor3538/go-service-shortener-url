@@ -22,6 +22,7 @@ func NewURLService() *URLService {
 
 var urlRepo = repositories.NewURLRepo()
 
+// Delete сервис для удаления урлов
 func (us *URLService) Delete(ids []string) {
 	for _, id := range ids {
 		err := urlRepo.DeleteURL(id)
@@ -31,6 +32,7 @@ func (us *URLService) Delete(ids []string) {
 	}
 }
 
+// Save сервис для сохранения урлов
 func (us *URLService) Save(urlModel string, userID string) (domain.URL, error) {
 	var address = config.Env.Address
 
@@ -66,6 +68,7 @@ func (us *URLService) Save(urlModel string, userID string) (domain.URL, error) {
 	return result, nil
 }
 
+// Get сервис для получения урлов
 func (us *URLService) Get(id string) (domain.URL, error) {
 	var address = config.Env.Address
 
@@ -77,6 +80,7 @@ func (us *URLService) Get(id string) (domain.URL, error) {
 	return result, nil
 }
 
+// GetByFullURL сервис для получения полной модели урлов
 func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
 	result, err := urlRepo.GetByFullURL(url)
 
@@ -100,6 +104,7 @@ func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
 	return result, nil
 }
 
+// SaveMany сервис для сохранения нескольких урлов
 func (us *URLService) SaveMany(urls []models.SaveBatchURLRequest) ([]models.SaveBatchURLResponse, error) {
 	var domainUrls []domain.URL
 	var response []models.SaveBatchURLResponse
@@ -132,6 +137,7 @@ func (us *URLService) SaveMany(urls []models.SaveBatchURLRequest) ([]models.Save
 	return response, nil
 }
 
+// GetByUserID сервис для получения всех урлов по пользователю
 func (us *URLService) GetByUserID(userID string) ([]models.FullURL, error) {
 	result, err := urlRepo.GetByUserID(userID)
 

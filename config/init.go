@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-// Структура для хранения переменных среды
+// env Структура для хранения переменных среды
 type env struct {
 	Address      string
 	FilePath     string
