@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// Структура для хранения переменных среды
 type env struct {
 	Address      string
 	FilePath     string
@@ -15,6 +16,7 @@ type env struct {
 
 var Env env
 
+// CheckFlagEnv Метод проверяющий флаги
 func CheckFlagEnv() {
 	var address string
 	var filePath string

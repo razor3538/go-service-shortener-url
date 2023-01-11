@@ -10,12 +10,16 @@ import (
 	"strings"
 )
 
+// URLRepo стуктура
 type URLRepo struct{}
 
+// NewURLRepo возвращает указатель на структуру URLRepo
+// со всеми ее методами
 func NewURLRepo() *URLRepo {
 	return &URLRepo{}
 }
 
+// Save сохраняет в базе данных сущность domain.URL
 func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
 	var existingURL domain.URL
 
@@ -68,7 +72,8 @@ func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
 	return url, nil
 }
 
-func (ur *URLRepo) DeleteURL(id string, token string) error {
+// DeleteURL удаляет сущность domain.URL
+func (ur *URLRepo) DeleteURL(id string) error {
 	var tmp domain.URL
 	if err := config.DB.
 		Where("string_short_id = ?", id).
@@ -79,6 +84,7 @@ func (ur *URLRepo) DeleteURL(id string, token string) error {
 	return nil
 }
 
+// SaveMany сохраняет сразу несколько сущностей domain.URL
 func (ur *URLRepo) SaveMany(urls []domain.URL) ([]domain.URL, error) {
 	var urlsResponse []domain.URL
 	var urlsID []string
@@ -102,12 +108,13 @@ func (ur *URLRepo) SaveMany(urls []domain.URL) ([]domain.URL, error) {
 	return urlsResponse, nil
 }
 
-func (ur *URLRepo) Get(id string) (domain.URL, error) {
+// Get возвращает сущность domain.URL по предоставленному сокращенному урлу
+func (ur *URLRepo) Get(shortUrl string) (domain.URL, error) {
 	var url domain.URL
 	if err := config.DB.
 		Table("urls as u").
 		Select("u.*").
-		Where("u.short_url = ?", id).
+		Where("u.short_url = ?", shortUrl).
 		Scan(&url).
 		Error; err != nil {
 		return domain.URL{}, err
@@ -115,6 +122,7 @@ func (ur *URLRepo) Get(id string) (domain.URL, error) {
 	return url, nil
 }
 
+// GetByFullURL возвращает сущность domain.URL по предоставленному полному урлу
 func (ur *URLRepo) GetByFullURL(id string) (domain.URL, error) {
 	var url domain.URL
 	if err := config.DB.
@@ -128,6 +136,7 @@ func (ur *URLRepo) GetByFullURL(id string) (domain.URL, error) {
 	return url, nil
 }
 
+// GetByUserID возвращает массив сущностей models.FullURL по пользователю
 func (ur *URLRepo) GetByUserID(id string) ([]models.FullURL, error) {
 	var url []models.FullURL
 	if err := config.DB.Model(&domain.URL{}).Where("user_id = ?", id).Pluck("full_url, short_url", &url).Error; err != nil {

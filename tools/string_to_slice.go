@@ -1,5 +1,6 @@
 package tools
 
+// StringToSlice Превращает строку в слайс
 func StringToSlice(rawString string) []string {
 	var result []string
 	var tmp string

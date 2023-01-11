@@ -11,17 +11,20 @@ import (
 	"net/url"
 )
 
+// URLService структура
 type URLService struct{}
 
+// NewURLService возвращает указатель на структуру URLService
+// со всеми ее методами
 func NewURLService() *URLService {
 	return &URLService{}
 }
 
 var urlRepo = repositories.NewURLRepo()
 
-func (us *URLService) Delete(ids []string, token string) {
+func (us *URLService) Delete(ids []string) {
 	for _, id := range ids {
-		err := urlRepo.DeleteURL(id, token)
+		err := urlRepo.DeleteURL(id)
 		if err != nil {
 			println(err.Error())
 		}

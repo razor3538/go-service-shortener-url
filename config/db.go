@@ -24,6 +24,7 @@ func InitBD() {
 	fmt.Println("You connected to your database.")
 }
 
+// Инициализация базы данных MySQL
 func initMySQL() {
 	dirname, err := os.Getwd()
 	if err != nil {
@@ -68,6 +69,7 @@ func initMySQL() {
 	}
 }
 
+// Инициализация базы данных PgSQL
 func initPgSQL() error {
 	var db *gorm.DB
 
