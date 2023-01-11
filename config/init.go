@@ -14,6 +14,7 @@ type env struct {
 	BdConnection string
 }
 
+// Env глобальная переменная для доступа к переменным среды
 var Env env
 
 // CheckFlagEnv Метод проверяющий флаги
