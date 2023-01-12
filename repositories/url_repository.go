@@ -109,12 +109,12 @@ func (ur *URLRepo) SaveMany(urls []domain.URL) ([]domain.URL, error) {
 }
 
 // Get возвращает сущность domain.URL по предоставленному сокращенному урлу
-func (ur *URLRepo) Get(shortUrl string) (domain.URL, error) {
+func (ur *URLRepo) Get(shortURL string) (domain.URL, error) {
 	var url domain.URL
 	if err := config.DB.
 		Table("urls as u").
 		Select("u.*").
-		Where("u.short_url = ?", shortUrl).
+		Where("u.short_url = ?", shortURL).
 		Scan(&url).
 		Error; err != nil {
 		return domain.URL{}, err
