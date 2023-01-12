@@ -18,4 +18,6 @@ func ExampleURLService_Save() {
 	body, _ := ioutil.ReadAll(req.Body)
 
 	println(body)
+
+	req.Body.Close()
 }
