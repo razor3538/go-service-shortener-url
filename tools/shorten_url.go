@@ -4,6 +4,7 @@ import (
 	"github.com/speps/go-hashids"
 )
 
+// ShortenURL сокращает url
 func ShortenURL(urlModel string) (string, error) {
 	hd := hashids.NewData()
 	hd.Salt = urlModel

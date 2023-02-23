@@ -14,6 +14,7 @@ import (
 // DB сущность базы данных
 var DB *gorm.DB
 
+// InitBD инициализирует подключение к базе данных либо MySQL либо PgSQL
 func InitBD() {
 	err := initPgSQL()
 
@@ -24,6 +25,7 @@ func InitBD() {
 	fmt.Println("You connected to your database.")
 }
 
+// Инициализация базы данных MySQL
 func initMySQL() {
 	dirname, err := os.Getwd()
 	if err != nil {
@@ -68,6 +70,7 @@ func initMySQL() {
 	}
 }
 
+// Инициализация базы данных PgSQL
 func initPgSQL() error {
 	var db *gorm.DB
 

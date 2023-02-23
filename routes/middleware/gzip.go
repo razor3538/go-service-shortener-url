@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// GzipMiddleware проверяет были ли данные в запросе сжаты и если да, то распаковывает их
 func GzipMiddleware(c *gin.Context) {
 	if c.Request.Header.Get(`Content-Encoding`) == `gzip` {
 		gz, err := gzip.NewReader(c.Request.Body)
