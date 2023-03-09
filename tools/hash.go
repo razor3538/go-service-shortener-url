@@ -8,10 +8,11 @@ import (
 	"github.com/google/uuid"
 )
 
+// HashCookie возвращает набор байтов из случайной захэшированной строки
 func HashCookie() ([]byte, error) {
 	var id = uuid.New()
 
-	key, err := generateRandom(2 * aes.BlockSize) // ключ шифрования
+	key, err := GenerateRandom(2 * aes.BlockSize) // ключ шифрования
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 		return []byte{}, err
@@ -33,18 +34,18 @@ func HashCookie() ([]byte, error) {
 	}
 
 	// создаём вектор инициализации
-	nonce, err := generateRandom(aesgcm.NonceSize())
+	nonce, err := GenerateRandom(aesgcm.NonceSize())
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 		return []byte{}, err
 
 	}
 
-	return aesgcm.Seal(nil, nonce, []byte(id.String()), nil), nil // зашифровываем
-
+	return aesgcm.Seal(nil, nonce, []byte(id.String()), nil), nil
 }
 
-func generateRandom(size int) ([]byte, error) {
+// GenerateRandom генерирует случайный набор байтов
+func GenerateRandom(size int) ([]byte, error) {
 	b := make([]byte, size)
 	_, err := rand.Read(b)
 	if err != nil {

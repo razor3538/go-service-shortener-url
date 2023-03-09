@@ -6,6 +6,7 @@ import (
 	"github.com/gin-contrib/pprof"
 )
 
+// main основная точка входа приложения
 func main() {
 	config.CheckFlagEnv()
 	config.InitBD()
