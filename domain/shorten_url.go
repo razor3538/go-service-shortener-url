@@ -1,5 +1,6 @@
 package domain
 
+// URL Структура хранящихся в базе данных урлов
 type URL struct {
 	Base
 	FullURL       string `gorm:"type:varchar; unique"`

@@ -5,10 +5,7 @@ import (
 	"net/http"
 )
 
-type RequestTest interface {
-	Body(model interface{}, c *gin.Context) error
-}
-
+// RequestBinderBody проверяет валидность пришедшего body
 func RequestBinderBody(model interface{}, c *gin.Context) error {
 	if err := c.ShouldBind(model); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -20,6 +17,7 @@ func RequestBinderBody(model interface{}, c *gin.Context) error {
 	return nil
 }
 
+// RequestBinderURI проверяет валидность пришедшего URI
 func RequestBinderURI(model interface{}, c *gin.Context) error {
 	if err := c.ShouldBindUri(model); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

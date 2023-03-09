@@ -3,6 +3,7 @@ package services
 import (
 	"example.com/m/v2/config"
 	"example.com/m/v2/domain"
+	"github.com/google/uuid"
 	"reflect"
 	"testing"
 )
@@ -58,5 +59,12 @@ func TestNewURLService(t *testing.T) {
 				t.Errorf("NewURLService() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func BenchmarkURLService_SaveMany(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		us := &URLService{}
+		us.Save(uuid.New().String(), "")
 	}
 }

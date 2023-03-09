@@ -8,6 +8,7 @@ import (
 	"example.com/m/v2/internal/app/api"
 )
 
+// SetupRouter настраивает все роуты приложения, а так же устанавливает middleware
 func SetupRouter() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 

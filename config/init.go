@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// env Структура для хранения переменных среды
 type env struct {
 	Address      string
 	FilePath     string
@@ -13,8 +14,10 @@ type env struct {
 	BdConnection string
 }
 
+// Env глобальная переменная для доступа к переменным среды
 var Env env
 
+// CheckFlagEnv Метод проверяющий флаги
 func CheckFlagEnv() {
 	var address string
 	var filePath string
