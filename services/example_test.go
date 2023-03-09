@@ -2,7 +2,7 @@ package services
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -15,7 +15,7 @@ func ExampleURLService_Save() {
 	req, _ := http.Post("http://localhost:8080/", "application/json", bodyReader)
 
 	// Читаем полученный ответ от сервера
-	body, _ := ioutil.ReadAll(req.Body)
+	body, _ := io.ReadAll(req.Body)
 
 	println(body)
 
