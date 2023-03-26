@@ -28,7 +28,7 @@ func ExampleURLService_Save() {
 	println(body)
 
 	err = req.Body.Close()
-	
+
 	if err != nil {
 		return
 	}
