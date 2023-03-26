@@ -65,6 +65,10 @@ func TestNewURLService(t *testing.T) {
 func BenchmarkURLService_SaveMany(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		us := &URLService{}
-		us.Save(uuid.New().String(), "")
+		
+		_, err := us.Save(uuid.New().String(), "")
+		if err != nil {
+			return
+		}
 	}
 }

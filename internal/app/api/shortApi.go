@@ -83,8 +83,8 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	if err != nil && urlModel.FullURL != "" {
 		c.Writer.WriteHeader(http.StatusConflict)
 
-		_, err := c.Writer.Write([]byte(urlModel.ShortURL))
-		if err != nil {
+		_, errWrite := c.Writer.Write([]byte(urlModel.ShortURL))
+		if errWrite != nil {
 			tools.CreateError(http.StatusBadRequest, err, c)
 			return
 		}
@@ -96,7 +96,11 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 	c.Writer.WriteHeader(http.StatusCreated)
 
-	c.Writer.Write([]byte(urlModel.ShortURL))
+	_, err = c.Writer.Write([]byte(urlModel.ShortURL))
+
+	if err != nil {
+		return
+	}
 }
 
 // ReturnFullURL сокращает урл полученный из JSON

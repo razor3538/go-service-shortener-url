@@ -20,9 +20,12 @@ func InitBD() {
 
 	if err != nil {
 		initMySQL()
-	}
+		_, err := fmt.Println("You connected to your database.")
 
-	fmt.Println("You connected to your database.")
+		if err != nil {
+			println(err)
+		}
+	}
 }
 
 // Инициализация базы данных MySQL

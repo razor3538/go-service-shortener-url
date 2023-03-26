@@ -82,7 +82,11 @@ func (us *URLService) Get(id string) (domain.URL, error) {
 
 // GetByFullURL сервис для получения полной модели урлов
 func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
-	result, err := urlRepo.GetByFullURL(url)
+	result, errRepo := urlRepo.GetByFullURL(url)
+
+	if errRepo != nil {
+		return domain.URL{}, errRepo
+	}
 
 	if result.FullURL == "" {
 		urlModel, err := us.Save(url, "")
@@ -95,10 +99,6 @@ func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
 		}
 	} else {
 		return result, errors.New("урл уже сохранен")
-	}
-
-	if err != nil {
-		return domain.URL{}, err
 	}
 
 	return result, nil

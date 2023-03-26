@@ -14,21 +14,32 @@ func HashCookie() ([]byte, error) {
 
 	key, err := GenerateRandom(2 * aes.BlockSize) // ключ шифрования
 	if err != nil {
-		fmt.Printf("error: %v\n", err)
+		_, errFmt := fmt.Printf("error: %v\n", err)
+
+		if errFmt != nil {
+			println(err)
+		}
 		return []byte{}, err
 
 	}
 
 	aesblock, err := aes.NewCipher(key)
 	if err != nil {
-		fmt.Printf("error: %v\n", err)
+		_, errFmt := fmt.Printf("error: %v\n", err)
+
+		if errFmt != nil {
+			println(err)
+		}
 		return []byte{}, err
 
 	}
 
 	aesgcm, err := cipher.NewGCM(aesblock)
 	if err != nil {
-		fmt.Printf("error: %v\n", err)
+		_, errFmt := fmt.Printf("error: %v\n", err)
+		if errFmt != nil {
+			println(err)
+		}
 		return []byte{}, err
 
 	}
@@ -36,7 +47,11 @@ func HashCookie() ([]byte, error) {
 	// создаём вектор инициализации
 	nonce, err := GenerateRandom(aesgcm.NonceSize())
 	if err != nil {
-		fmt.Printf("error: %v\n", err)
+		_, errFmt := fmt.Printf("error: %v\n", err)
+
+		if errFmt != nil {
+			println(err)
+		}
 		return []byte{}, err
 
 	}

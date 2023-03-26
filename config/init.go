@@ -24,7 +24,11 @@ func CheckFlagEnv() {
 	var basePath string
 	var dbConnection string
 
-	_ = godotenv.Load()
+	err := godotenv.Load()
+
+	if err != nil {
+		println(err)
+	}
 
 	if os.Getenv("SERVER_ADDRESS") != "" {
 		address = os.Getenv("SERVER_ADDRESS")
