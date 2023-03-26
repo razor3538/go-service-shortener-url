@@ -6,12 +6,14 @@ import (
 	"golang.org/x/tools/go/analysis"
 )
 
+// EscapeOsExit переменная анализатора
 var EscapeOsExit = &analysis.Analyzer{
 	Name: "osexitcheck",
 	Doc:  "check for os exit in main.go",
 	Run:  run,
 }
 
+// run функция выполняющая основной функционал анализатора
 func run(pass *analysis.Pass) (interface{}, error) {
 	for _, file := range pass.Files {
 		ast.Inspect(file, func(node ast.Node) bool {
@@ -40,6 +42,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	return nil, nil
 }
 
+// extractFuncCallInFunc распрашивает в цикле вызовы функций и возвращает позицию где найден вызов метода Exit
 func extractFuncCallInFunc(stmts []ast.Stmt) (bool, token.Pos) {
 	for _, stmt := range stmts {
 		if exprStmt, ok := stmt.(*ast.ExprStmt); ok {

@@ -6,12 +6,14 @@ import (
 	"golang.org/x/tools/go/analysis"
 )
 
+// ErrCheckAnalyzer переменная анализатора
 var ErrCheckAnalyzer = &analysis.Analyzer{
 	Name: "errcheck",
 	Doc:  "check for unchecked errors",
 	Run:  run,
 }
 
+// run функция выполняющая основной функционал анализатора
 func run(pass *analysis.Pass) (interface{}, error) {
 	expr := func(x *ast.ExprStmt) {
 		// проверяем, что выражение представляет собой вызов функции,
