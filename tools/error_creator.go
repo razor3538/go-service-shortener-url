@@ -6,13 +6,13 @@ import (
 )
 
 // CreateError позволяет вернуть кастомную ошибку
-func CreateError(code int, err error, c *gin.Context) {
+func CreateError(code int, requestErr error, c *gin.Context) {
 	c.JSON(code, gin.H{
 		"code":  code,
-		"error": err.Error(),
+		"error": requestErr.Error(),
 	})
-	err = c.AbortWithError(code, errors.New(err.Error()))
-	
+	err := c.AbortWithError(code, errors.New(requestErr.Error()))
+
 	if err != nil {
 		println(err)
 	}
