@@ -1,8 +1,7 @@
 package routes
 
 import (
-	"example.com/m/v2/routes/middleware"
-
+	"example.com/m/v2/internal/routes/middleware"
 	"github.com/gin-gonic/gin"
 
 	"example.com/m/v2/internal/app/api"

@@ -3,17 +3,14 @@ package api
 import (
 	"encoding/json"
 	"errors"
-	"example.com/m/v2/config"
+	"example.com/m/v2/internal/app/models"
+	config2 "example.com/m/v2/internal/config"
+	"example.com/m/v2/internal/services"
+	"example.com/m/v2/internal/tools"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
-
-	"example.com/m/v2/internal/app/models"
-
-	"example.com/m/v2/services"
-
-	"example.com/m/v2/tools"
 )
 
 // ShortURLAPI Структура обрабатываюващая обращения к API
@@ -85,12 +82,12 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 		_, errWrite := c.Writer.Write([]byte(urlModel.ShortURL))
 		if errWrite != nil {
-			tools.CreateError(http.StatusBadRequest, err, c)
+			CreateError(http.StatusBadRequest, err, c)
 			return
 		}
 		return
 	} else if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
@@ -121,7 +118,7 @@ func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
 	}
 
 	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
@@ -130,7 +127,7 @@ func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
 	})
 
 	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
@@ -148,7 +145,7 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 	urlModel, err := urlService.Get(name)
 
 	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
@@ -166,7 +163,7 @@ func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 	headerToken := c.GetHeader("Authorization")
 
 	if headerToken == "" {
-		tools.CreateError(http.StatusNoContent, errors.New("пустой токен"), c)
+		CreateError(http.StatusNoContent, errors.New("пустой токен"), c)
 		return
 	}
 	userID := headerToken
@@ -174,7 +171,7 @@ func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 	urlModel, err := urlService.GetByUserID(userID)
 
 	if err != nil {
-		tools.CreateError(http.StatusNoContent, err, c)
+		CreateError(http.StatusNoContent, err, c)
 		return
 	}
 
@@ -192,7 +189,7 @@ func (sua *ShortURLAPI) SaveMany(c *gin.Context) {
 	urlModel, err := urlService.SaveMany(body)
 
 	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
@@ -201,16 +198,16 @@ func (sua *ShortURLAPI) SaveMany(c *gin.Context) {
 
 // Ping обработчик эндопоинта для проверки работоспособности базы данных
 func (sua *ShortURLAPI) Ping(c *gin.Context) {
-	if config.Env.BdConnection != "" {
-		sqlDB, err := config.DB.DB()
+	if config2.Env.BdConnection != "" {
+		sqlDB, err := config2.DB.DB()
 		if err != nil {
-			tools.CreateError(http.StatusInternalServerError, err, c)
+			CreateError(http.StatusInternalServerError, err, c)
 			return
 		}
 		if err = sqlDB.Ping(); err != nil {
 			err := sqlDB.Close()
 			if err != nil {
-				tools.CreateError(http.StatusInternalServerError, err, c)
+				CreateError(http.StatusInternalServerError, err, c)
 				return
 			}
 		}

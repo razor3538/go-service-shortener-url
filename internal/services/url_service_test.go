@@ -1,8 +1,8 @@
 package services
 
 import (
-	"example.com/m/v2/config"
-	"example.com/m/v2/domain"
+	"example.com/m/v2/internal/config"
+	"example.com/m/v2/internal/domain"
 	"github.com/google/uuid"
 	"reflect"
 	"testing"

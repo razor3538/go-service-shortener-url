@@ -2,11 +2,11 @@ package services
 
 import (
 	"errors"
-	"example.com/m/v2/config"
-	"example.com/m/v2/domain"
 	"example.com/m/v2/internal/app/models"
-	"example.com/m/v2/repositories"
-	"example.com/m/v2/tools"
+	"example.com/m/v2/internal/config"
+	"example.com/m/v2/internal/domain"
+	"example.com/m/v2/internal/repositories"
+	"example.com/m/v2/internal/tools"
 	"github.com/google/uuid"
 	"net/url"
 )
