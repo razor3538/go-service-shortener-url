@@ -36,7 +36,7 @@ func main() {
 		Cache:      autocert.DirCache("/var/www/.cache"),
 	}
 
-	if config2.Env.EnableHttps != "" {
+	if config2.Env.EnableHTTPS != "" {
 		log.Fatal(autotls.RunWithManager(r, &m))
 	} else {
 		if err := r.Run(address); err != nil {
