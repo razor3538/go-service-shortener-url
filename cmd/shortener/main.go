@@ -5,6 +5,9 @@ import (
 	"example.com/m/v2/internal/routes"
 	"fmt"
 	"github.com/gin-contrib/pprof"
+	"github.com/gin-gonic/autotls"
+	"golang.org/x/crypto/acme/autocert"
+	"log"
 )
 
 var (
@@ -27,7 +30,17 @@ func main() {
 	r := routes.SetupRouter()
 	pprof.Register(r)
 
-	if err := r.Run(address); err != nil {
-		panic(err)
+	m := autocert.Manager{
+		Prompt:     autocert.AcceptTOS,
+		HostPolicy: autocert.HostWhitelist("myPrettyHttpsServerForYandex.com"),
+		Cache:      autocert.DirCache("/var/www/.cache"),
+	}
+
+	if config2.Env.EnableHttps != "" {
+		log.Fatal(autotls.RunWithManager(r, &m))
+	} else {
+		if err := r.Run(address); err != nil {
+			panic(err)
+		}
 	}
 }
