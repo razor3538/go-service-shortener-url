@@ -12,7 +12,7 @@ type env struct {
 	FilePath     string
 	BaseURL      string
 	BdConnection string
-	EnableHttps  string
+	EnableHTTPS  string
 }
 
 // Env глобальная переменная для доступа к переменным среды
@@ -54,7 +54,7 @@ func CheckFlagEnv() {
 	var flagFilePath = flag.String("f", "", "File path")
 	var flagBaseURL = flag.String("b", "", "Base url dir")
 	var flagDSN = flag.String("d", "", "Base dsn connection")
-	var flagHttps = flag.String("s", "", "enable https")
+	var flagHTTPS = flag.String("s", "", "enable https")
 
 	flag.Parse()
 
@@ -75,8 +75,8 @@ func CheckFlagEnv() {
 		dbConnection = *flagDSN
 	}
 
-	if *flagHttps != "" {
-		enableHttps = *flagHttps
+	if *flagHTTPS != "" {
+		enableHttps = *flagHTTPS
 	} else {
 		enableHttps = ""
 	}
@@ -86,6 +86,6 @@ func CheckFlagEnv() {
 		FilePath:     filePath,
 		BaseURL:      basePath,
 		BdConnection: dbConnection,
-		EnableHttps:  enableHttps,
+		EnableHTTPS:  enableHttps,
 	}
 }
