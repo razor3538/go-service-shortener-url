@@ -24,7 +24,7 @@ func CheckFlagEnv() {
 	var filePath string
 	var basePath string
 	var dbConnection string
-	var enableHttps string
+	var enableHTTPS string
 
 	err := godotenv.Load()
 
@@ -76,9 +76,9 @@ func CheckFlagEnv() {
 	}
 
 	if *flagHTTPS != "" {
-		enableHttps = *flagHTTPS
+		enableHTTPS = *flagHTTPS
 	} else {
-		enableHttps = ""
+		enableHTTPS = ""
 	}
 
 	Env = env{
@@ -86,6 +86,6 @@ func CheckFlagEnv() {
 		FilePath:     filePath,
 		BaseURL:      basePath,
 		BdConnection: dbConnection,
-		EnableHTTPS:  enableHttps,
+		EnableHTTPS:  enableHTTPS,
 	}
 }
