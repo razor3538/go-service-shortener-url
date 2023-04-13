@@ -2,12 +2,12 @@ package services
 
 import (
 	"errors"
-	"example.com/m/v2/internal/app/models"
-	"example.com/m/v2/internal/config"
-	"example.com/m/v2/internal/domain"
-	"example.com/m/v2/internal/repositories"
-	"example.com/m/v2/internal/tools"
 	"github.com/google/uuid"
+	"go-service-shortener-url/internal/app/models"
+	"go-service-shortener-url/internal/config"
+	"go-service-shortener-url/internal/domain"
+	"go-service-shortener-url/internal/repositories"
+	"go-service-shortener-url/internal/tools"
 	"net/url"
 )
 
@@ -27,7 +27,7 @@ func (us *URLService) Delete(ids []string) {
 	for _, id := range ids {
 		err := urlRepo.DeleteURL(id)
 		if err != nil {
-			println(err.Error())
+			tools.ErrorLog.Println(err.Error())
 		}
 	}
 }

@@ -1,11 +1,11 @@
 package main
 
 import (
-	config2 "example.com/m/v2/internal/config"
-	"example.com/m/v2/internal/routes"
-	"fmt"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/autotls"
+	"go-service-shortener-url/internal/config"
+	"go-service-shortener-url/internal/routes"
+	"go-service-shortener-url/internal/tools"
 	"golang.org/x/crypto/acme/autocert"
 	"log"
 )
@@ -18,14 +18,14 @@ var (
 
 // main основная точка входа приложения
 func main() {
-	println(fmt.Sprintf("Build version: %s", buildVersion))
-	println(fmt.Sprintf("Build date: %s", buildDate))
-	println(fmt.Sprintf("Build commit: %s", buildCommit))
+	tools.InfoLog.Printf("Build version: %s", buildVersion)
+	tools.InfoLog.Printf("Build date: %s", buildDate)
+	tools.InfoLog.Printf("Build commit: %s", buildCommit)
 
-	config2.CheckFlagEnv()
-	config2.InitBD()
+	config.CheckFlagEnv()
+	config.InitBD()
 
-	address := config2.Env.Address
+	address := config.Env.Address
 
 	r := routes.SetupRouter()
 	pprof.Register(r)
@@ -36,11 +36,11 @@ func main() {
 		Cache:      autocert.DirCache("/var/www/.cache"),
 	}
 
-	if config2.Env.EnableHTTPS != "" {
+	if config.Env.EnableHTTPS != "" {
 		log.Fatal(autotls.RunWithManager(r, &m))
 	} else {
 		if err := r.Run(address); err != nil {
-			panic(err)
+			tools.ErrorLog.Fatal(err)
 		}
 	}
 }

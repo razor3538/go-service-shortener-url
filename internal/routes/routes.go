@@ -1,10 +1,9 @@
 package routes
 
 import (
-	"example.com/m/v2/internal/routes/middleware"
 	"github.com/gin-gonic/gin"
-
-	"example.com/m/v2/internal/app/api"
+	"go-service-shortener-url/internal/app/api"
+	"go-service-shortener-url/internal/routes/middleware"
 )
 
 // SetupRouter настраивает все роуты приложения, а так же устанавливает middleware

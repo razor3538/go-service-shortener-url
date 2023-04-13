@@ -3,6 +3,7 @@ package api
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"go-service-shortener-url/internal/tools"
 )
 
 // CreateError позволяет вернуть кастомную ошибку
@@ -14,6 +15,6 @@ func CreateError(code int, requestErr error, c *gin.Context) {
 	err := c.AbortWithError(code, errors.New(requestErr.Error()))
 
 	if err != nil {
-		println(err)
+		tools.ErrorLog.Fatal(err)
 	}
 }

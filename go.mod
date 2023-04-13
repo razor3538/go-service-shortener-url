@@ -1,4 +1,4 @@
-module example.com/m/v2
+module go-service-shortener-url
 
 go 1.18
 
