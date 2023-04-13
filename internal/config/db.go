@@ -3,6 +3,7 @@ package config
 import (
 	"database/sql"
 	"example.com/m/v2/internal/domain"
+	"example.com/m/v2/internal/tools"
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
@@ -23,7 +24,7 @@ func InitBD() {
 		_, err := fmt.Println("You connected to your database.")
 
 		if err != nil {
-			println(err)
+			tools.ErrorLog.Println(err)
 		}
 	}
 }

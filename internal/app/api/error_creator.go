@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"example.com/m/v2/internal/tools"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,6 +15,6 @@ func CreateError(code int, requestErr error, c *gin.Context) {
 	err := c.AbortWithError(code, errors.New(requestErr.Error()))
 
 	if err != nil {
-		println(err)
+		tools.ErrorLog.Println(err)
 	}
 }

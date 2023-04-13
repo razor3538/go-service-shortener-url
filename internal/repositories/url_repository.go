@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"example.com/m/v2/internal/app/models"
-	config2 "example.com/m/v2/internal/config"
+	"example.com/m/v2/internal/config"
 	"example.com/m/v2/internal/domain"
 	"os"
 	"strings"
@@ -23,7 +23,7 @@ func NewURLRepo() *URLRepo {
 func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
 	var existingURL domain.URL
 
-	if err := config2.DB.
+	if err := config.DB.
 		Table("urls as u").
 		Select("u.*").
 		Where("u.full_url = ?", url.FullURL).
@@ -36,12 +36,12 @@ func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
 		return existingURL, errors.New("урл уже сохранен")
 	}
 
-	if err := config2.DB.
+	if err := config.DB.
 		Create(&url).
 		Error; err != nil {
 		return domain.URL{}, err
 	}
-	filePath := config2.Env.FilePath
+	filePath := config.Env.FilePath
 
 	if filePath != "" {
 		file, err := os.OpenFile(filePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
@@ -75,7 +75,7 @@ func (ur *URLRepo) Save(url domain.URL) (domain.URL, error) {
 // DeleteURL удаляет сущность domain.URL
 func (ur *URLRepo) DeleteURL(id string) error {
 	var tmp domain.URL
-	if err := config2.DB.
+	if err := config.DB.
 		Where("string_short_id = ?", id).
 		Delete(&domain.URL{}).Scan(&tmp).
 		Error; err != nil {
@@ -93,11 +93,11 @@ func (ur *URLRepo) SaveMany(urls []domain.URL) ([]domain.URL, error) {
 		urlsID = append(urlsID, urlID.ID)
 	}
 
-	if err := config2.DB.Create(&urls).Error; err != nil {
+	if err := config.DB.Create(&urls).Error; err != nil {
 		return []domain.URL{}, err
 	}
 
-	if err := config2.DB.
+	if err := config.DB.
 		Table("urls as u").
 		Select("u.*").
 		Where("u.id in ?", urlsID).
@@ -111,7 +111,7 @@ func (ur *URLRepo) SaveMany(urls []domain.URL) ([]domain.URL, error) {
 // Get возвращает сущность domain.URL по предоставленному сокращенному урлу
 func (ur *URLRepo) Get(shortURL string) (domain.URL, error) {
 	var url domain.URL
-	if err := config2.DB.
+	if err := config.DB.
 		Table("urls as u").
 		Select("u.*").
 		Where("u.short_url = ?", shortURL).
@@ -125,7 +125,7 @@ func (ur *URLRepo) Get(shortURL string) (domain.URL, error) {
 // GetByFullURL возвращает сущность domain.URL по предоставленному полному урлу
 func (ur *URLRepo) GetByFullURL(id string) (domain.URL, error) {
 	var url domain.URL
-	if err := config2.DB.
+	if err := config.DB.
 		Table("urls as u").
 		Select("u.*").
 		Where("u.full_url = ?", id).
@@ -139,7 +139,7 @@ func (ur *URLRepo) GetByFullURL(id string) (domain.URL, error) {
 // GetByUserID возвращает массив сущностей models.FullURL по пользователю
 func (ur *URLRepo) GetByUserID(id string) ([]models.FullURL, error) {
 	var url []models.FullURL
-	if err := config2.DB.Model(&domain.URL{}).Where("user_id = ?", id).Pluck("full_url, short_url", &url).Error; err != nil {
+	if err := config.DB.Model(&domain.URL{}).Where("user_id = ?", id).Pluck("full_url, short_url", &url).Error; err != nil {
 		return []models.FullURL{}, err
 	}
 	return url, nil

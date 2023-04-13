@@ -2,6 +2,7 @@ package services
 
 import (
 	"bytes"
+	"example.com/m/v2/internal/tools"
 	"io"
 	"net/http"
 )
@@ -15,17 +16,17 @@ func ExampleURLService_Save() {
 	req, err := http.Post("http://localhost:8080/", "application/json", bodyReader)
 
 	if err != nil {
-		println(err)
+		tools.ErrorLog.Println(err)
 	}
 
 	// Читаем полученный ответ от сервера
 	body, err := io.ReadAll(req.Body)
 
 	if err != nil {
-		println(err)
+		tools.ErrorLog.Println(err)
 	}
 
-	println(body)
+	tools.ErrorLog.Println(body)
 
 	err = req.Body.Close()
 

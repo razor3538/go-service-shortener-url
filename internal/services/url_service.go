@@ -27,7 +27,7 @@ func (us *URLService) Delete(ids []string) {
 	for _, id := range ids {
 		err := urlRepo.DeleteURL(id)
 		if err != nil {
-			println(err.Error())
+			tools.ErrorLog.Println(err.Error())
 		}
 	}
 }

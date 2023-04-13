@@ -17,7 +17,7 @@ func HashCookie() ([]byte, error) {
 		_, errFmt := fmt.Printf("error: %v\n", err)
 
 		if errFmt != nil {
-			println(err)
+			ErrorLog.Println(err)
 		}
 		return []byte{}, err
 
@@ -28,7 +28,7 @@ func HashCookie() ([]byte, error) {
 		_, errFmt := fmt.Printf("error: %v\n", err)
 
 		if errFmt != nil {
-			println(err)
+			ErrorLog.Println(err)
 		}
 		return []byte{}, err
 
@@ -38,7 +38,7 @@ func HashCookie() ([]byte, error) {
 	if err != nil {
 		_, errFmt := fmt.Printf("error: %v\n", err)
 		if errFmt != nil {
-			println(err)
+			ErrorLog.Println(err)
 		}
 		return []byte{}, err
 
@@ -50,7 +50,7 @@ func HashCookie() ([]byte, error) {
 		_, errFmt := fmt.Printf("error: %v\n", err)
 
 		if errFmt != nil {
-			println(err)
+			ErrorLog.Println(err)
 		}
 		return []byte{}, err
 

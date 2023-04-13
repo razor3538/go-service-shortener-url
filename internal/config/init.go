@@ -1,6 +1,7 @@
 package config
 
 import (
+	"example.com/m/v2/internal/tools"
 	"flag"
 	"github.com/joho/godotenv"
 	"os"
@@ -27,7 +28,7 @@ func CheckFlagEnv() {
 	err := godotenv.Load()
 
 	if err != nil {
-		println(err)
+		tools.ErrorLog.Println(err)
 	}
 
 	if os.Getenv("SERVER_ADDRESS") != "" {

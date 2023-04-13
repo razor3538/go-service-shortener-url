@@ -1,7 +1,7 @@
 package main
 
 import (
-	config2 "example.com/m/v2/internal/config"
+	"example.com/m/v2/internal/config"
 	"example.com/m/v2/internal/routes"
 	"fmt"
 	"github.com/gin-contrib/pprof"
@@ -19,10 +19,10 @@ func main() {
 	println(fmt.Sprintf("Build date: %s", buildDate))
 	println(fmt.Sprintf("Build commit: %s", buildCommit))
 
-	config2.CheckFlagEnv()
-	config2.InitBD()
+	config.CheckFlagEnv()
+	config.InitBD()
 
-	address := config2.Env.Address
+	address := config.Env.Address
 
 	r := routes.SetupRouter()
 	pprof.Register(r)

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"example.com/m/v2/internal/app/models"
-	config2 "example.com/m/v2/internal/config"
+	"example.com/m/v2/internal/config"
 	"example.com/m/v2/internal/services"
 	"example.com/m/v2/internal/tools"
 	"fmt"
@@ -198,8 +198,8 @@ func (sua *ShortURLAPI) SaveMany(c *gin.Context) {
 
 // Ping обработчик эндопоинта для проверки работоспособности базы данных
 func (sua *ShortURLAPI) Ping(c *gin.Context) {
-	if config2.Env.BdConnection != "" {
-		sqlDB, err := config2.DB.DB()
+	if config.Env.BdConnection != "" {
+		sqlDB, err := config.DB.DB()
 		if err != nil {
 			CreateError(http.StatusInternalServerError, err, c)
 			return
