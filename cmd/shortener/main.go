@@ -1,9 +1,10 @@
 package main
 
 import (
+	"fmt"
+
 	"example.com/m/v2/internal/config"
 	"example.com/m/v2/internal/routes"
-	"fmt"
 	"github.com/gin-contrib/pprof"
 )
 

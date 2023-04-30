@@ -1,10 +1,11 @@
 package config
 
 import (
-	"example.com/m/v2/internal/tools"
 	"flag"
-	"github.com/joho/godotenv"
 	"os"
+
+	"example.com/m/v2/internal/tools"
+	"github.com/joho/godotenv"
 )
 
 // env Структура для хранения переменных среды

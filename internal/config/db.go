@@ -2,13 +2,14 @@ package config
 
 import (
 	"database/sql"
+	"fmt"
+	"os"
+
 	"example.com/m/v2/internal/domain"
 	"example.com/m/v2/internal/tools"
-	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"os"
 	"path/filepath"
 )
 

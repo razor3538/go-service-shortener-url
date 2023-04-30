@@ -2,8 +2,9 @@ package middleware
 
 import (
 	"compress/gzip"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // GzipMiddleware проверяет были ли данные в запросе сжаты и если да, то распаковывает их
