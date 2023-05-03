@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"io"
 	"net/http"
+
+	"example.com/m/v2/internal/tools"
 )
 
 func ExampleURLService_Save() {
@@ -12,12 +14,24 @@ func ExampleURLService_Save() {
 	bodyReader := bytes.NewReader(jsonBody)
 
 	// Делаем запрос на сокращение урла
-	req, _ := http.Post("http://localhost:8080/", "application/json", bodyReader)
+	req, err := http.Post("http://localhost:8080/", "application/json", bodyReader)
+
+	if err != nil {
+		tools.ErrorLog.Println(err)
+	}
 
 	// Читаем полученный ответ от сервера
-	body, _ := io.ReadAll(req.Body)
+	body, err := io.ReadAll(req.Body)
 
-	println(body)
+	if err != nil {
+		tools.ErrorLog.Println(err)
+	}
 
-	req.Body.Close()
+	tools.ErrorLog.Println(body)
+
+	err = req.Body.Close()
+
+	if err != nil {
+		return
+	}
 }

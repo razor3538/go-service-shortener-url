@@ -15,6 +15,10 @@ func ShortenURL(urlModel string) (string, error) {
 		return "", err
 	}
 
-	id, _ := h.Encode([]int{1, 2, 3})
+	id, err := h.Encode([]int{1, 2, 3})
+
+	if err != nil {
+		return "", err
+	}
 	return id, nil
 }

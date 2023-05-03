@@ -3,17 +3,15 @@ package api
 import (
 	"encoding/json"
 	"errors"
-	"example.com/m/v2/config"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 
 	"example.com/m/v2/internal/app/models"
-
-	"example.com/m/v2/services"
-
-	"example.com/m/v2/tools"
+	"example.com/m/v2/internal/config"
+	"example.com/m/v2/internal/services"
+	"example.com/m/v2/internal/tools"
+	"github.com/gin-gonic/gin"
 )
 
 // ShortURLAPI Структура обрабатываюващая обращения к API
@@ -83,20 +81,24 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	if err != nil && urlModel.FullURL != "" {
 		c.Writer.WriteHeader(http.StatusConflict)
 
-		_, err := c.Writer.Write([]byte(urlModel.ShortURL))
-		if err != nil {
-			tools.CreateError(http.StatusBadRequest, err, c)
+		_, errWrite := c.Writer.Write([]byte(urlModel.ShortURL))
+		if errWrite != nil {
+			CreateError(http.StatusBadRequest, err, c)
 			return
 		}
 		return
 	} else if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
 	c.Writer.WriteHeader(http.StatusCreated)
 
-	c.Writer.Write([]byte(urlModel.ShortURL))
+	_, err = c.Writer.Write([]byte(urlModel.ShortURL))
+
+	if err != nil {
+		return
+	}
 }
 
 // ReturnFullURL сокращает урл полученный из JSON
@@ -117,7 +119,7 @@ func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
 	}
 
 	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
@@ -126,7 +128,7 @@ func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
 	})
 
 	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
@@ -144,7 +146,7 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 	urlModel, err := urlService.Get(name)
 
 	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
@@ -162,7 +164,7 @@ func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 	headerToken := c.GetHeader("Authorization")
 
 	if headerToken == "" {
-		tools.CreateError(http.StatusNoContent, errors.New("пустой токен"), c)
+		CreateError(http.StatusNoContent, errors.New("пустой токен"), c)
 		return
 	}
 	userID := headerToken
@@ -170,7 +172,7 @@ func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 	urlModel, err := urlService.GetByUserID(userID)
 
 	if err != nil {
-		tools.CreateError(http.StatusNoContent, err, c)
+		CreateError(http.StatusNoContent, err, c)
 		return
 	}
 
@@ -188,7 +190,7 @@ func (sua *ShortURLAPI) SaveMany(c *gin.Context) {
 	urlModel, err := urlService.SaveMany(body)
 
 	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
@@ -200,13 +202,13 @@ func (sua *ShortURLAPI) Ping(c *gin.Context) {
 	if config.Env.BdConnection != "" {
 		sqlDB, err := config.DB.DB()
 		if err != nil {
-			tools.CreateError(http.StatusInternalServerError, err, c)
+			CreateError(http.StatusInternalServerError, err, c)
 			return
 		}
 		if err = sqlDB.Ping(); err != nil {
 			err := sqlDB.Close()
 			if err != nil {
-				tools.CreateError(http.StatusInternalServerError, err, c)
+				CreateError(http.StatusInternalServerError, err, c)
 				return
 			}
 		}

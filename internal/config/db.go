@@ -2,12 +2,14 @@ package config
 
 import (
 	"database/sql"
-	"example.com/m/v2/domain"
 	"fmt"
+	"os"
+
+	"example.com/m/v2/internal/domain"
+	"example.com/m/v2/internal/tools"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"os"
 	"path/filepath"
 )
 
@@ -20,9 +22,12 @@ func InitBD() {
 
 	if err != nil {
 		initMySQL()
-	}
+		_, err := fmt.Println("You connected to your database.")
 
-	fmt.Println("You connected to your database.")
+		if err != nil {
+			tools.ErrorLog.Println(err)
+		}
+	}
 }
 
 // Инициализация базы данных MySQL

@@ -1,11 +1,12 @@
 package services
 
 import (
-	"example.com/m/v2/config"
-	"example.com/m/v2/domain"
-	"github.com/google/uuid"
 	"reflect"
 	"testing"
+
+	"example.com/m/v2/internal/config"
+	"example.com/m/v2/internal/domain"
+	"github.com/google/uuid"
 )
 
 func TestURLService_Save(t *testing.T) {
@@ -65,6 +66,10 @@ func TestNewURLService(t *testing.T) {
 func BenchmarkURLService_SaveMany(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		us := &URLService{}
-		us.Save(uuid.New().String(), "")
+
+		_, err := us.Save(uuid.New().String(), "")
+		if err != nil {
+			return
+		}
 	}
 }

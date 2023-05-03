@@ -2,13 +2,14 @@ package services
 
 import (
 	"errors"
-	"example.com/m/v2/config"
-	"example.com/m/v2/domain"
-	"example.com/m/v2/internal/app/models"
-	"example.com/m/v2/repositories"
-	"example.com/m/v2/tools"
-	"github.com/google/uuid"
 	"net/url"
+
+	"example.com/m/v2/internal/app/models"
+	"example.com/m/v2/internal/config"
+	"example.com/m/v2/internal/domain"
+	"example.com/m/v2/internal/repositories"
+	"example.com/m/v2/internal/tools"
+	"github.com/google/uuid"
 )
 
 // URLService структура
@@ -27,7 +28,7 @@ func (us *URLService) Delete(ids []string) {
 	for _, id := range ids {
 		err := urlRepo.DeleteURL(id)
 		if err != nil {
-			println(err.Error())
+			tools.ErrorLog.Println(err.Error())
 		}
 	}
 }
@@ -82,7 +83,11 @@ func (us *URLService) Get(id string) (domain.URL, error) {
 
 // GetByFullURL сервис для получения полной модели урлов
 func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
-	result, err := urlRepo.GetByFullURL(url)
+	result, errRepo := urlRepo.GetByFullURL(url)
+
+	if errRepo != nil {
+		return domain.URL{}, errRepo
+	}
 
 	if result.FullURL == "" {
 		urlModel, err := us.Save(url, "")
@@ -95,10 +100,6 @@ func (us *URLService) GetByFullURL(url string) (domain.URL, error) {
 		}
 	} else {
 		return result, errors.New("урл уже сохранен")
-	}
-
-	if err != nil {
-		return domain.URL{}, err
 	}
 
 	return result, nil
