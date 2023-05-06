@@ -20,6 +20,12 @@ var DB *gorm.DB
 func InitBD() {
 	err := initPgSQL()
 
+	println(err.Error())
+	println(err.Error())
+	println(err.Error())
+	println(err.Error())
+	println(err.Error())
+
 	if err != nil {
 		initMySQL()
 		_, err := fmt.Println("You connected to your database.")
