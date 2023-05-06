@@ -1,20 +1,23 @@
 package config
 
 import (
-	"flag"
-	"os"
-
+	"encoding/json"
 	"example.com/m/v2/internal/tools"
+	"flag"
+	"fmt"
 	"github.com/joho/godotenv"
+	"io"
+	"os"
+	"strconv"
 )
 
 // env Структура для хранения переменных среды
 type env struct {
-	Address      string
-	FilePath     string
-	BaseURL      string
-	BdConnection string
-	EnableHttps  string
+	Address      string `json:"server_address"`
+	FilePath     string `json:"file_storage_path"`
+	BaseURL      string `json:"base_url"`
+	BdConnection string `json:"database_dsn"`
+	EnableHttps  bool   `json:"enable_https"`
 }
 
 // Env глобальная переменная для доступа к переменным среды
@@ -26,12 +29,61 @@ func CheckFlagEnv() {
 	var filePath string
 	var basePath string
 	var dbConnection string
-	var enableHttps string
+	var enableHttps bool
+	var configFile string
 
 	err := godotenv.Load()
 
 	if err != nil {
 		tools.ErrorLog.Println(err)
+	}
+
+	if os.Getenv("CONFIG") != "" {
+		configFile = os.Getenv("CONFIG")
+	} else {
+		configFile = ""
+	}
+
+	var flagConfigFile = flag.String("c", "", "Path to config file")
+	var flagAddress = flag.String("a", "", "Server name")
+	var flagFilePath = flag.String("f", "", "File path")
+	var flagBaseURL = flag.String("b", "", "Base url dir")
+	var flagDSN = flag.String("d", "", "Base dsn connection")
+	var flagHttps = flag.Bool("s", false, "Enable TLS connection")
+
+	flag.Parse()
+
+	if *flagConfigFile != "" {
+
+		configFile = *flagConfigFile
+	}
+
+	if configFile != "" {
+		jsonFile, errJson := os.Open(configFile)
+		if errJson != nil {
+			fmt.Println(err)
+		}
+		byteValue, _ := io.ReadAll(jsonFile)
+
+		var envJson env
+
+		errJson = json.Unmarshal(byteValue, &envJson)
+		if errJson != nil {
+			return
+		}
+
+		enableHttps = envJson.EnableHttps
+		address = envJson.Address
+		filePath = envJson.FilePath
+		basePath = envJson.BaseURL
+		enableHttps = envJson.EnableHttps
+
+		defer func(jsonFile *os.File) {
+			errJson = jsonFile.Close()
+			if err != nil {
+				return
+			}
+		}(jsonFile)
 	}
 
 	if os.Getenv("SERVER_ADDRESS") != "" {
@@ -52,19 +104,17 @@ func CheckFlagEnv() {
 		dbConnection = ""
 	}
 
-	if os.Getenv("ENABLE_HTTPS") != "" {
-		enableHttps = os.Getenv("ENABLE_HTTPS")
-	} else {
-		enableHttps = ""
+	if os.Getenv("DATABASE_DSN") != "" {
+		https, err := strconv.ParseBool(os.Getenv("ENABLE_HTTPS"))
+		if err != nil {
+			return
+		}
+		if https {
+			enableHttps = https
+		} else {
+			enableHttps = false
+		}
 	}
-
-	var flagAddress = flag.String("a", "", "Server name")
-	var flagFilePath = flag.String("f", "", "File path")
-	var flagBaseURL = flag.String("b", "", "Base url dir")
-	var flagDSN = flag.String("d", "", "Base dsn connection")
-	var flagHttps = flag.String("s", "", "Enable TLS connection")
-
-	flag.Parse()
 
 	if *flagAddress != "" {
 		address = *flagAddress
@@ -83,7 +133,7 @@ func CheckFlagEnv() {
 		dbConnection = *flagDSN
 	}
 
-	if *flagHttps != "" {
+	if *flagHttps {
 
 		enableHttps = *flagHttps
 	}

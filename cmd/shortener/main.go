@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
-
 	"example.com/m/v2/internal/config"
 	"example.com/m/v2/internal/routes"
+	"fmt"
 	"github.com/gin-contrib/pprof"
 )
 
@@ -28,7 +27,7 @@ func main() {
 	r := routes.SetupRouter()
 	pprof.Register(r)
 
-	if config.Env.EnableHttps != "" {
+	if config.Env.EnableHttps {
 		err := r.RunTLS(address, "./testdata/server.pem", "./testdata/server.key")
 		if err != nil {
 			panic(err)
