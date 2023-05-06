@@ -54,11 +54,11 @@ func CheckFlagEnv() {
 	flag.Parse()
 
 	if *flagConfigFile != "" {
-
 		configFile = *flagConfigFile
 	}
 
 	if configFile != "" {
+		println("зашел куда не надо")
 		jsonFile, errJSON := os.Open(configFile)
 		if errJSON != nil {
 			fmt.Println(err)
