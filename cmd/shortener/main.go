@@ -28,7 +28,7 @@ func main() {
 	r := routes.SetupRouter()
 	pprof.Register(r)
 
-	if config.Env.EnableHttps != "" {
+	if config.Env.EnableHttps {
 		err := r.RunTLS(address, "./testdata/server.pem", "./testdata/server.key")
 		if err != nil {
 			panic(err)

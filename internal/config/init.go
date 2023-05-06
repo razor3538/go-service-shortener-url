@@ -1,8 +1,12 @@
 package config
 
 import (
+	"encoding/json"
 	"flag"
+	"fmt"
+	"io"
 	"os"
+	"strconv"
 
 	"example.com/m/v2/internal/tools"
 	"github.com/joho/godotenv"
@@ -10,11 +14,11 @@ import (
 
 // env Структура для хранения переменных среды
 type env struct {
-	Address      string
-	FilePath     string
-	BaseURL      string
-	BdConnection string
-	EnableHttps  string
+	Address      string `json:"server_address"`
+	FilePath     string `json:"file_storage_path"`
+	BaseURL      string `json:"base_url"`
+	BdConnection string `json:"database_dsn"`
+	EnableHttps  bool   `json:"enable_https"`
 }
 
 // Env глобальная переменная для доступа к переменным среды
@@ -26,12 +30,56 @@ func CheckFlagEnv() {
 	var filePath string
 	var basePath string
 	var dbConnection string
-	var enableHttps string
+	var enableHttps bool
+	var configFile string
 
 	err := godotenv.Load()
 
 	if err != nil {
 		tools.ErrorLog.Println(err)
+	}
+
+	if os.Getenv("CONFIG") != "" {
+		configFile = os.Getenv("CONFIG")
+	} else {
+		configFile = ""
+	}
+
+	var flagConfigFile = flag.String("c", "", "Path to config file")
+
+	flag.Parse()
+
+	if *flagConfigFile != "" {
+
+		configFile = *flagConfigFile
+	}
+
+	if configFile != "" {
+		jsonFile, errJson := os.Open(configFile)
+		if errJson != nil {
+			fmt.Println(err)
+		}
+		byteValue, _ := io.ReadAll(jsonFile)
+
+		var envJson env
+
+		errJson = json.Unmarshal(byteValue, &envJson)
+		if errJson != nil {
+			return
+		}
+
+		enableHttps = envJson.EnableHttps
+		address = envJson.Address
+		filePath = envJson.FilePath
+		basePath = envJson.BaseURL
+		enableHttps = envJson.EnableHttps
+
+		defer func(jsonFile *os.File) {
+			errJson = jsonFile.Close()
+			if err != nil {
+				return
+			}
+		}(jsonFile)
 	}
 
 	if os.Getenv("SERVER_ADDRESS") != "" {
@@ -52,17 +100,21 @@ func CheckFlagEnv() {
 		dbConnection = ""
 	}
 
-	if os.Getenv("ENABLE_HTTPS") != "" {
-		enableHttps = os.Getenv("ENABLE_HTTPS")
+	https, err := strconv.ParseBool(os.Getenv("ENABLE_HTTPS"))
+	if err != nil {
+		return
+	}
+	if https {
+		enableHttps = https
 	} else {
-		enableHttps = ""
+		enableHttps = false
 	}
 
 	var flagAddress = flag.String("a", "", "Server name")
 	var flagFilePath = flag.String("f", "", "File path")
 	var flagBaseURL = flag.String("b", "", "Base url dir")
 	var flagDSN = flag.String("d", "", "Base dsn connection")
-	var flagHttps = flag.String("s", "", "Enable TLS connection")
+	var flagHttps = flag.Bool("s", false, "Enable TLS connection")
 
 	flag.Parse()
 
@@ -83,7 +135,7 @@ func CheckFlagEnv() {
 		dbConnection = *flagDSN
 	}
 
-	if *flagHttps != "" {
+	if *flagHttps {
 
 		enableHttps = *flagHttps
 	}
