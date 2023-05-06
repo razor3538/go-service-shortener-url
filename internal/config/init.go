@@ -76,7 +76,7 @@ func CheckFlagEnv() {
 		address = envJSON.Address
 		filePath = envJSON.FilePath
 		basePath = envJSON.BaseURL
-		enableHTTPS = envJSON.EnableHTTPS
+		dbConnection = envJSON.BdConnection
 
 		defer func(jsonFile *os.File) {
 			errJSON = jsonFile.Close()
