@@ -17,7 +17,7 @@ type env struct {
 	FilePath     string `json:"file_storage_path"`
 	BaseURL      string `json:"base_url"`
 	BdConnection string `json:"database_dsn"`
-	EnableHttps  bool   `json:"enable_https"`
+	EnableHTTPS  bool   `json:"enable_https"`
 }
 
 // Env глобальная переменная для доступа к переменным среды
@@ -29,7 +29,7 @@ func CheckFlagEnv() {
 	var filePath string
 	var basePath string
 	var dbConnection string
-	var enableHttps bool
+	var enableHTTPS bool
 	var configFile string
 
 	err := godotenv.Load()
@@ -49,7 +49,7 @@ func CheckFlagEnv() {
 	var flagFilePath = flag.String("f", "", "File path")
 	var flagBaseURL = flag.String("b", "", "Base url dir")
 	var flagDSN = flag.String("d", "", "Base dsn connection")
-	var flagHttps = flag.Bool("s", false, "Enable TLS connection")
+	var flagHTTPS = flag.Bool("s", false, "Enable TLS connection")
 
 	flag.Parse()
 
@@ -59,27 +59,27 @@ func CheckFlagEnv() {
 	}
 
 	if configFile != "" {
-		jsonFile, errJson := os.Open(configFile)
-		if errJson != nil {
+		jsonFile, errJSON := os.Open(configFile)
+		if errJSON != nil {
 			fmt.Println(err)
 		}
 		byteValue, _ := io.ReadAll(jsonFile)
 
-		var envJson env
+		var envJSON env
 
-		errJson = json.Unmarshal(byteValue, &envJson)
-		if errJson != nil {
+		errJSON = json.Unmarshal(byteValue, &envJSON)
+		if errJSON != nil {
 			return
 		}
 
-		enableHttps = envJson.EnableHttps
-		address = envJson.Address
-		filePath = envJson.FilePath
-		basePath = envJson.BaseURL
-		enableHttps = envJson.EnableHttps
+		enableHTTPS = envJSON.EnableHTTPS
+		address = envJSON.Address
+		filePath = envJSON.FilePath
+		basePath = envJSON.BaseURL
+		enableHTTPS = envJSON.EnableHTTPS
 
 		defer func(jsonFile *os.File) {
-			errJson = jsonFile.Close()
+			errJSON = jsonFile.Close()
 			if err != nil {
 				return
 			}
@@ -110,9 +110,9 @@ func CheckFlagEnv() {
 			return
 		}
 		if https {
-			enableHttps = https
+			enableHTTPS = https
 		} else {
-			enableHttps = false
+			enableHTTPS = false
 		}
 	}
 
@@ -133,9 +133,9 @@ func CheckFlagEnv() {
 		dbConnection = *flagDSN
 	}
 
-	if *flagHttps {
+	if *flagHTTPS {
 
-		enableHttps = *flagHttps
+		enableHTTPS = *flagHTTPS
 	}
 
 	Env = env{
@@ -143,6 +143,6 @@ func CheckFlagEnv() {
 		FilePath:     filePath,
 		BaseURL:      basePath,
 		BdConnection: dbConnection,
-		EnableHttps:  enableHttps,
+		EnableHTTPS:  enableHTTPS,
 	}
 }
