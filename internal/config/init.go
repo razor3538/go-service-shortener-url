@@ -14,6 +14,7 @@ type env struct {
 	FilePath     string
 	BaseURL      string
 	BdConnection string
+	EnableHttps  string
 }
 
 // Env глобальная переменная для доступа к переменным среды
@@ -25,6 +26,7 @@ func CheckFlagEnv() {
 	var filePath string
 	var basePath string
 	var dbConnection string
+	var enableHttps string
 
 	err := godotenv.Load()
 
@@ -50,10 +52,17 @@ func CheckFlagEnv() {
 		dbConnection = ""
 	}
 
+	if os.Getenv("ENABLE_HTTPS") != "" {
+		enableHttps = os.Getenv("ENABLE_HTTPS")
+	} else {
+		enableHttps = ""
+	}
+
 	var flagAddress = flag.String("a", "", "Server name")
 	var flagFilePath = flag.String("f", "", "File path")
 	var flagBaseURL = flag.String("b", "", "Base url dir")
 	var flagDSN = flag.String("d", "", "Base dsn connection")
+	var flagHttps = flag.String("s", "", "Enable TLS connection")
 
 	flag.Parse()
 
@@ -74,10 +83,16 @@ func CheckFlagEnv() {
 		dbConnection = *flagDSN
 	}
 
+	if *flagHttps != "" {
+
+		enableHttps = *flagHttps
+	}
+
 	Env = env{
 		Address:      address,
 		FilePath:     filePath,
 		BaseURL:      basePath,
 		BdConnection: dbConnection,
+		EnableHttps:  enableHttps,
 	}
 }
