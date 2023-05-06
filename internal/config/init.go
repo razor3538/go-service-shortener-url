@@ -2,14 +2,13 @@ package config
 
 import (
 	"encoding/json"
+	"example.com/m/v2/internal/tools"
 	"flag"
 	"fmt"
+	"github.com/joho/godotenv"
 	"io"
 	"os"
 	"strconv"
-
-	"example.com/m/v2/internal/tools"
-	"github.com/joho/godotenv"
 )
 
 // env Структура для хранения переменных среды
@@ -46,6 +45,11 @@ func CheckFlagEnv() {
 	}
 
 	var flagConfigFile = flag.String("c", "", "Path to config file")
+	var flagAddress = flag.String("a", "", "Server name")
+	var flagFilePath = flag.String("f", "", "File path")
+	var flagBaseURL = flag.String("b", "", "Base url dir")
+	var flagDSN = flag.String("d", "", "Base dsn connection")
+	var flagHttps = flag.Bool("s", false, "Enable TLS connection")
 
 	flag.Parse()
 
@@ -100,23 +104,17 @@ func CheckFlagEnv() {
 		dbConnection = ""
 	}
 
-	https, err := strconv.ParseBool(os.Getenv("ENABLE_HTTPS"))
-	if err != nil {
-		return
+	if os.Getenv("DATABASE_DSN") != "" {
+		https, err := strconv.ParseBool(os.Getenv("ENABLE_HTTPS"))
+		if err != nil {
+			return
+		}
+		if https {
+			enableHttps = https
+		} else {
+			enableHttps = false
+		}
 	}
-	if https {
-		enableHttps = https
-	} else {
-		enableHttps = false
-	}
-
-	var flagAddress = flag.String("a", "", "Server name")
-	var flagFilePath = flag.String("f", "", "File path")
-	var flagBaseURL = flag.String("b", "", "Base url dir")
-	var flagDSN = flag.String("d", "", "Base dsn connection")
-	var flagHttps = flag.Bool("s", false, "Enable TLS connection")
-
-	flag.Parse()
 
 	if *flagAddress != "" {
 		address = *flagAddress
