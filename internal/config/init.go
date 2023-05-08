@@ -77,71 +77,79 @@ func CheckFlagEnv() {
 		basePath = envJSON.BaseURL
 		dbConnection = envJSON.BdConnection
 
+		Env = env{
+			Address:      address,
+			FilePath:     filePath,
+			BaseURL:      basePath,
+			BdConnection: dbConnection,
+			EnableHTTPS:  enableHTTPS,
+		}
+
 		defer func(jsonFile *os.File) {
 			errJSON = jsonFile.Close()
 			if err != nil {
 				return
 			}
 		}(jsonFile)
-	}
-
-	if os.Getenv("SERVER_ADDRESS") != "" {
-		address = os.Getenv("SERVER_ADDRESS")
 	} else {
-		address = "localhost:8080"
-	}
-
-	if os.Getenv("FILE_STORAGE_PATH") != "" {
-		filePath = os.Getenv("FILE_STORAGE_PATH")
-	} else {
-		filePath = ""
-	}
-
-	if os.Getenv("DATABASE_DSN") != "" {
-		dbConnection = os.Getenv("DATABASE_DSN")
-	} else {
-		dbConnection = ""
-	}
-
-	if os.Getenv("DATABASE_DSN") != "" {
-		https, err := strconv.ParseBool(os.Getenv("ENABLE_HTTPS"))
-		if err != nil {
-			return
-		}
-		if https {
-			enableHTTPS = https
+		if os.Getenv("SERVER_ADDRESS") != "" {
+			address = os.Getenv("SERVER_ADDRESS")
 		} else {
-			enableHTTPS = false
+			address = "localhost:8080"
 		}
-	}
 
-	if *flagAddress != "" {
-		address = *flagAddress
-	}
+		if os.Getenv("FILE_STORAGE_PATH") != "" {
+			filePath = os.Getenv("FILE_STORAGE_PATH")
+		} else {
+			filePath = ""
+		}
 
-	if *flagFilePath != "" {
-		filePath = *flagFilePath
-	}
+		if os.Getenv("DATABASE_DSN") != "" {
+			dbConnection = os.Getenv("DATABASE_DSN")
+		} else {
+			dbConnection = ""
+		}
 
-	if *flagBaseURL != "" {
-		basePath = *flagBaseURL
-	}
+		if os.Getenv("DATABASE_DSN") != "" {
+			https, err := strconv.ParseBool(os.Getenv("ENABLE_HTTPS"))
+			if err != nil {
+				return
+			}
+			if https {
+				enableHTTPS = https
+			} else {
+				enableHTTPS = false
+			}
+		}
 
-	if *flagDSN != "" {
+		if *flagAddress != "" {
+			address = *flagAddress
+		}
 
-		dbConnection = *flagDSN
-	}
+		if *flagFilePath != "" {
+			filePath = *flagFilePath
+		}
 
-	if *flagHTTPS {
+		if *flagBaseURL != "" {
+			basePath = *flagBaseURL
+		}
 
-		enableHTTPS = *flagHTTPS
-	}
+		if *flagDSN != "" {
 
-	Env = env{
-		Address:      address,
-		FilePath:     filePath,
-		BaseURL:      basePath,
-		BdConnection: dbConnection,
-		EnableHTTPS:  enableHTTPS,
+			dbConnection = *flagDSN
+		}
+
+		if *flagHTTPS {
+
+			enableHTTPS = *flagHTTPS
+		}
+
+		Env = env{
+			Address:      address,
+			FilePath:     filePath,
+			BaseURL:      basePath,
+			BdConnection: dbConnection,
+			EnableHTTPS:  enableHTTPS,
+		}
 	}
 }
