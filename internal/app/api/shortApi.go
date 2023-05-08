@@ -90,8 +90,7 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 		switch s {
 		case syscall.SIGINT:
-			fmt.Println("Signal interrupt triggered.")
-			exitChan <- 0
+
 		case syscall.SIGTERM:
 			fmt.Println("Signal terminte triggered.")
 			exitChan <- 0
@@ -100,7 +99,7 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 			exitChan <- 0
 		default:
 			fmt.Println("Unknown signal.")
-			exitChan <- 1
+			exitChan <- 0
 		}
 	}()
 
@@ -136,8 +135,6 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 	urlString := string(b)
 
-	println(1)
-
 	urlModel, err := urlService.Save(urlString, userID)
 
 	if err != nil && urlModel.FullURL != "" {
@@ -153,8 +150,6 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 		CreateError(http.StatusBadRequest, err, c)
 		return
 	}
-
-	println(2)
 
 	c.Writer.WriteHeader(http.StatusCreated)
 
