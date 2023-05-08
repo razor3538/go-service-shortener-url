@@ -33,6 +33,8 @@ func main() {
 			panic(err)
 		}
 	} else {
+		println(address)
+		println(address)
 		if err := r.Run(address); err != nil {
 			panic(err)
 		}
