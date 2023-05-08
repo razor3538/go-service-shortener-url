@@ -2,6 +2,7 @@ package config
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"os"
 
@@ -79,10 +80,10 @@ func initMySQL() {
 func initPgSQL() error {
 	var db *gorm.DB
 
-	println(Env.BdConnection)
-	println(Env.BdConnection)
-	println(Env.BdConnection)
-	println(Env.BdConnection)
+	if Env.BdConnection == "" {
+		return errors.New("подключение к базе данных не настроенно")
+	}
+
 	db, err := gorm.Open(postgres.Open(Env.BdConnection), &gorm.Config{})
 
 	if err != nil {
