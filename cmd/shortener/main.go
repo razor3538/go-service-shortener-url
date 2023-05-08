@@ -33,7 +33,7 @@ func main() {
 			panic(err)
 		}
 	} else {
-		if err := r.Run(":8005"); err != nil {
+		if err := r.Run(address); err != nil {
 			panic(err)
 		}
 	}
