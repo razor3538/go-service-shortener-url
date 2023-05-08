@@ -20,18 +20,12 @@ var DB *gorm.DB
 func InitBD() {
 	err := initPgSQL()
 
-	println(err.Error())
-	println(err.Error())
-	println(err.Error())
-	println(err.Error())
-	println(err.Error())
-
 	if err != nil {
 		initMySQL()
-		_, err := fmt.Println("You connected to your database.")
+		_, errFMT := fmt.Println("You connected to your database.")
 
-		if err != nil {
-			tools.ErrorLog.Println(err)
+		if errFMT != nil {
+			tools.ErrorLog.Println(errFMT)
 		}
 	}
 }
@@ -85,6 +79,10 @@ func initMySQL() {
 func initPgSQL() error {
 	var db *gorm.DB
 
+	println(Env.BdConnection)
+	println(Env.BdConnection)
+	println(Env.BdConnection)
+	println(Env.BdConnection)
 	db, err := gorm.Open(postgres.Open(Env.BdConnection), &gorm.Config{})
 
 	if err != nil {
