@@ -77,31 +77,32 @@ func (sua *ShortURLAPI) DeleteURLs(c *gin.Context) {
 
 // ShortenURL обработчик эндопоинта для сохранения урла полученного из строки
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
-	signalChanel := make(chan os.Signal, 1)
-	signal.Notify(signalChanel,
-		syscall.SIGINT,
-		syscall.SIGTERM,
-		syscall.SIGQUIT)
-
-	exitChan := make(chan int)
-
-	go func() {
-		s := <-signalChanel
-
-		switch s {
-		case syscall.SIGINT:
-
-		case syscall.SIGTERM:
-			fmt.Println("Signal terminte triggered.")
-			exitChan <- 0
-		case syscall.SIGQUIT:
-			fmt.Println("Signal quit triggered.")
-			exitChan <- 0
-		default:
-			fmt.Println("Unknown signal.")
-			exitChan <- 0
-		}
-	}()
+	//signalChanel := make(chan os.Signal, 1)
+	//signal.Notify(signalChanel,
+	//	syscall.SIGINT,
+	//	syscall.SIGTERM,
+	//	syscall.SIGQUIT)
+	//
+	//exitChan := make(chan int)
+	//
+	//go func() {
+	//	s := <-signalChanel
+	//
+	//	switch s {
+	//	case syscall.SIGINT:
+	//		fmt.Println("Signal interrupt triggered.")
+	//		exitChan <- 0
+	//	case syscall.SIGTERM:
+	//		fmt.Println("Signal terminte triggered.")
+	//		exitChan <- 0
+	//	case syscall.SIGQUIT:
+	//		fmt.Println("Signal quit triggered.")
+	//		exitChan <- 0
+	//	default:
+	//		fmt.Println("Unknown signal.")
+	//		exitChan <- 1
+	//	}
+	//}()
 
 	var reader = c.Request.Body
 	var userID string
@@ -158,9 +159,9 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	if err != nil {
 		return
 	}
-
-	exitCode := <-exitChan
-	os.Exit(exitCode)
+	//
+	//exitCode := <-exitChan
+	//os.Exit(exitCode)
 }
 
 // ReturnFullURL сокращает урл полученный из JSON
