@@ -136,6 +136,8 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 
 	urlString := string(b)
 
+	println(1)
+
 	urlModel, err := urlService.Save(urlString, userID)
 
 	if err != nil && urlModel.FullURL != "" {
@@ -151,6 +153,8 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 		CreateError(http.StatusBadRequest, err, c)
 		return
 	}
+
+	println(2)
 
 	c.Writer.WriteHeader(http.StatusCreated)
 
