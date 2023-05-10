@@ -2,13 +2,14 @@ package main
 
 import (
 	"context"
-	"example.com/m/v2/internal/config"
-	"example.com/m/v2/internal/routes"
 	"fmt"
-	"github.com/gin-contrib/pprof"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"example.com/m/v2/internal/config"
+	"example.com/m/v2/internal/routes"
+	"github.com/gin-contrib/pprof"
 )
 
 var (
@@ -35,13 +36,15 @@ func main() {
 	config.InitBD()
 
 	address := config.Env.Address
+	pem := config.Env.Pem
+	key := config.Env.Key
 
 	r := routes.SetupRouter()
 	pprof.Register(r)
 
 	go func() {
 		if config.Env.EnableHTTPS {
-			err := r.RunTLS(address, "./testdata/server.pem", "./testdata/server.key")
+			err := r.RunTLS(address, pem, key)
 			if err != nil {
 				panic(err)
 			}

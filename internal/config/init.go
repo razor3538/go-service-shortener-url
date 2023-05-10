@@ -2,18 +2,21 @@ package config
 
 import (
 	"encoding/json"
-	"example.com/m/v2/internal/tools"
 	"flag"
 	"fmt"
-	"github.com/joho/godotenv"
 	"io"
 	"os"
 	"strconv"
+
+	"example.com/m/v2/internal/tools"
+	"github.com/joho/godotenv"
 )
 
 // env Структура для хранения переменных среды
 type env struct {
 	Address      string `json:"server_address"`
+	Pem          string `json:"pem"`
+	Key          string `json:"key"`
 	FilePath     string `json:"file_storage_path"`
 	BaseURL      string `json:"base_url"`
 	BdConnection string `json:"database_dsn"`
@@ -29,6 +32,8 @@ func CheckFlagEnv() {
 	var filePath string
 	var basePath string
 	var dbConnection string
+	var pem string
+	var key string
 	var enableHTTPS bool
 	var configFile string
 
@@ -50,6 +55,8 @@ func CheckFlagEnv() {
 	var flagBaseURL = flag.String("b", "", "Base url dir")
 	var flagDSN = flag.String("d", "", "Base dsn connection")
 	var flagHTTPS = flag.Bool("s", false, "Enable TLS connection")
+	var flagPem = flag.String("p", "", "pem")
+	var flagKey = flag.String("k", "", "key")
 
 	flag.Parse()
 
@@ -76,6 +83,8 @@ func CheckFlagEnv() {
 		filePath = envJSON.FilePath
 		basePath = envJSON.BaseURL
 		dbConnection = envJSON.BdConnection
+		pem = envJSON.Pem
+		key = envJSON.Key
 
 		Env = env{
 			Address:      address,
@@ -83,6 +92,8 @@ func CheckFlagEnv() {
 			BaseURL:      basePath,
 			BdConnection: dbConnection,
 			EnableHTTPS:  enableHTTPS,
+			Pem:          pem,
+			Key:          key,
 		}
 
 		defer func(jsonFile *os.File) {
@@ -108,6 +119,18 @@ func CheckFlagEnv() {
 			dbConnection = os.Getenv("DATABASE_DSN")
 		} else {
 			dbConnection = ""
+		}
+
+		if os.Getenv("PEM") != "" {
+			pem = os.Getenv("PEM")
+		} else {
+			pem = ""
+		}
+
+		if os.Getenv("KEY") != "" {
+			key = os.Getenv("KEY")
+		} else {
+			key = ""
 		}
 
 		if os.Getenv("DATABASE_DSN") != "" {
@@ -144,12 +167,24 @@ func CheckFlagEnv() {
 			enableHTTPS = *flagHTTPS
 		}
 
+		if *flagPem == "" {
+
+			pem = *flagPem
+		}
+
+		if *flagKey == "" {
+
+			key = *flagKey
+		}
+
 		Env = env{
 			Address:      address,
 			FilePath:     filePath,
 			BaseURL:      basePath,
 			BdConnection: dbConnection,
 			EnableHTTPS:  enableHTTPS,
+			Pem:          pem,
+			Key:          key,
 		}
 	}
 }
