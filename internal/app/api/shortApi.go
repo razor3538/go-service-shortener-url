@@ -11,9 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 // ShortURLAPI Структура обрабатываюващая обращения к API
@@ -29,32 +26,6 @@ var urlService = services.NewURLService()
 
 // DeleteURLs обработчик эндопоинта для удаления урлов по пользователю
 func (sua *ShortURLAPI) DeleteURLs(c *gin.Context) {
-	signalChanel := make(chan os.Signal, 1)
-	signal.Notify(signalChanel,
-		syscall.SIGINT,
-		syscall.SIGTERM,
-		syscall.SIGQUIT)
-
-	exitChan := make(chan int)
-	s := <-signalChanel
-
-	go func() {
-		switch s {
-		case syscall.SIGINT:
-			fmt.Println("Signal interrupt triggered.")
-			exitChan <- 0
-		case syscall.SIGTERM:
-			fmt.Println("Signal terminte triggered.")
-			exitChan <- 1
-		case syscall.SIGQUIT:
-			fmt.Println("Signal quit triggered.")
-			exitChan <- 1
-		default:
-			fmt.Println("Unknown signal.")
-			exitChan <- 1
-		}
-	}()
-
 	var reader = c.Request.Body
 
 	b, err := io.ReadAll(reader)
@@ -68,39 +39,10 @@ func (sua *ShortURLAPI) DeleteURLs(c *gin.Context) {
 	go urlService.Delete(tools.StringToSlice(urlString))
 
 	c.Writer.WriteHeader(http.StatusAccepted)
-
-	exitCode := <-exitChan
-	os.Exit(exitCode)
 }
 
 // ShortenURL обработчик эндопоинта для сохранения урла полученного из строки
 func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
-	signalChanel := make(chan os.Signal, 1)
-	signal.Notify(signalChanel,
-		syscall.SIGINT,
-		syscall.SIGTERM,
-		syscall.SIGQUIT)
-
-	exitChan := make(chan int)
-	s := <-signalChanel
-
-	go func() {
-		switch s {
-		case syscall.SIGINT:
-			fmt.Println("Signal interrupt triggered.")
-			exitChan <- 0
-		case syscall.SIGTERM:
-			fmt.Println("Signal terminte triggered.")
-			exitChan <- 1
-		case syscall.SIGQUIT:
-			fmt.Println("Signal quit triggered.")
-			exitChan <- 1
-		default:
-			fmt.Println("Unknown signal.")
-			exitChan <- 1
-		}
-	}()
-
 	var reader = c.Request.Body
 	var userID string
 	var byteString string
@@ -156,39 +98,10 @@ func (sua *ShortURLAPI) ShortenURL(c *gin.Context) {
 	if err != nil {
 		return
 	}
-
-	exitCode := <-exitChan
-	os.Exit(exitCode)
 }
 
 // ReturnFullURL сокращает урл полученный из JSON
 func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
-	signalChanel := make(chan os.Signal, 1)
-	signal.Notify(signalChanel,
-		syscall.SIGINT,
-		syscall.SIGTERM,
-		syscall.SIGQUIT)
-
-	exitChan := make(chan int)
-	s := <-signalChanel
-
-	go func() {
-		switch s {
-		case syscall.SIGINT:
-			fmt.Println("Signal interrupt triggered.")
-			exitChan <- 0
-		case syscall.SIGTERM:
-			fmt.Println("Signal terminte triggered.")
-			exitChan <- 1
-		case syscall.SIGQUIT:
-			fmt.Println("Signal quit triggered.")
-			exitChan <- 1
-		default:
-			fmt.Println("Unknown signal.")
-			exitChan <- 1
-		}
-	}()
-
 	var body models.URLRequestModel
 
 	if err := tools.RequestBinderBody(&body, c); err != nil {
@@ -223,39 +136,10 @@ func (sua *ShortURLAPI) ReturnFullURL(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{
 		"result": urlModel.ShortURL,
 	})
-
-	exitCode := <-exitChan
-	os.Exit(exitCode)
 }
 
 // GetFullURL обработчик эндопоинта для сохранения урла полученного из JSON
 func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
-	signalChanel := make(chan os.Signal, 1)
-	signal.Notify(signalChanel,
-		syscall.SIGINT,
-		syscall.SIGTERM,
-		syscall.SIGQUIT)
-
-	exitChan := make(chan int)
-	s := <-signalChanel
-
-	go func() {
-		switch s {
-		case syscall.SIGINT:
-			fmt.Println("Signal interrupt triggered.")
-			exitChan <- 0
-		case syscall.SIGTERM:
-			fmt.Println("Signal terminte triggered.")
-			exitChan <- 1
-		case syscall.SIGQUIT:
-			fmt.Println("Signal quit triggered.")
-			exitChan <- 1
-		default:
-			fmt.Println("Unknown signal.")
-			exitChan <- 1
-		}
-	}()
-
 	name := c.Param("id")
 
 	urlModel, err := urlService.Get(name)
@@ -272,39 +156,10 @@ func (sua *ShortURLAPI) GetFullURL(c *gin.Context) {
 
 		c.JSON(http.StatusTemporaryRedirect, nil)
 	}
-
-	exitCode := <-exitChan
-	os.Exit(exitCode)
 }
 
 // GetByUserID обработчик эндопоинта для получения всех сохраненых пользователем урлов
 func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
-	signalChanel := make(chan os.Signal, 1)
-	signal.Notify(signalChanel,
-		syscall.SIGINT,
-		syscall.SIGTERM,
-		syscall.SIGQUIT)
-
-	exitChan := make(chan int)
-	s := <-signalChanel
-
-	go func() {
-		switch s {
-		case syscall.SIGINT:
-			fmt.Println("Signal interrupt triggered.")
-			exitChan <- 0
-		case syscall.SIGTERM:
-			fmt.Println("Signal terminte triggered.")
-			exitChan <- 1
-		case syscall.SIGQUIT:
-			fmt.Println("Signal quit triggered.")
-			exitChan <- 1
-		default:
-			fmt.Println("Unknown signal.")
-			exitChan <- 1
-		}
-	}()
-
 	headerToken := c.GetHeader("Authorization")
 
 	if headerToken == "" {
@@ -321,39 +176,10 @@ func (sua *ShortURLAPI) GetByUserID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, urlModel)
-
-	exitCode := <-exitChan
-	os.Exit(exitCode)
 }
 
 // SaveMany обработчик эндопоинта для сохранения множества урлов 1 запросом
 func (sua *ShortURLAPI) SaveMany(c *gin.Context) {
-	signalChanel := make(chan os.Signal, 1)
-	signal.Notify(signalChanel,
-		syscall.SIGINT,
-		syscall.SIGTERM,
-		syscall.SIGQUIT)
-
-	exitChan := make(chan int)
-	s := <-signalChanel
-
-	go func() {
-		switch s {
-		case syscall.SIGINT:
-			fmt.Println("Signal interrupt triggered.")
-			exitChan <- 0
-		case syscall.SIGTERM:
-			fmt.Println("Signal terminte triggered.")
-			exitChan <- 1
-		case syscall.SIGQUIT:
-			fmt.Println("Signal quit triggered.")
-			exitChan <- 1
-		default:
-			fmt.Println("Unknown signal.")
-			exitChan <- 1
-		}
-	}()
-
 	var body []models.SaveBatchURLRequest
 
 	if err := tools.RequestBinderBody(&body, c); err != nil {
@@ -368,39 +194,10 @@ func (sua *ShortURLAPI) SaveMany(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, urlModel)
-
-	exitCode := <-exitChan
-	os.Exit(exitCode)
 }
 
 // Ping обработчик эндопоинта для проверки работоспособности базы данных
 func (sua *ShortURLAPI) Ping(c *gin.Context) {
-	signalChanel := make(chan os.Signal, 1)
-	signal.Notify(signalChanel,
-		syscall.SIGINT,
-		syscall.SIGTERM,
-		syscall.SIGQUIT)
-
-	exitChan := make(chan int)
-	s := <-signalChanel
-
-	go func() {
-		switch s {
-		case syscall.SIGINT:
-			fmt.Println("Signal interrupt triggered.")
-			exitChan <- 0
-		case syscall.SIGTERM:
-			fmt.Println("Signal terminte triggered.")
-			exitChan <- 1
-		case syscall.SIGQUIT:
-			fmt.Println("Signal quit triggered.")
-			exitChan <- 1
-		default:
-			fmt.Println("Unknown signal.")
-			exitChan <- 1
-		}
-	}()
-
 	if config.Env.BdConnection != "" {
 		sqlDB, err := config.DB.DB()
 		if err != nil {
@@ -416,7 +213,4 @@ func (sua *ShortURLAPI) Ping(c *gin.Context) {
 		}
 		c.Writer.WriteHeader(http.StatusOK)
 	}
-
-	exitCode := <-exitChan
-	os.Exit(exitCode)
 }
