@@ -14,13 +14,14 @@ import (
 
 // env Структура для хранения переменных среды
 type env struct {
-	Address      string `json:"server_address"`
-	Pem          string `json:"pem"`
-	Key          string `json:"key"`
-	FilePath     string `json:"file_storage_path"`
-	BaseURL      string `json:"base_url"`
-	BdConnection string `json:"database_dsn"`
-	EnableHTTPS  bool   `json:"enable_https"`
+	Address       string `json:"server_address"`
+	Pem           string `json:"pem"`
+	Key           string `json:"key"`
+	FilePath      string `json:"file_storage_path"`
+	BaseURL       string `json:"base_url"`
+	BdConnection  string `json:"database_dsn"`
+	EnableHTTPS   bool   `json:"enable_https"`
+	TrustedSubnet string `json:"trusted_subnet"`
 }
 
 // Env глобальная переменная для доступа к переменным среды
@@ -36,6 +37,7 @@ func CheckFlagEnv() {
 	var key string
 	var enableHTTPS bool
 	var configFile string
+	var trustedSubnet string
 
 	err := godotenv.Load()
 
@@ -57,6 +59,7 @@ func CheckFlagEnv() {
 	var flagHTTPS = flag.Bool("s", false, "Enable TLS connection")
 	var flagPem = flag.String("p", "", "pem")
 	var flagKey = flag.String("k", "", "key")
+	var flagTrustedSubnet = flag.String("t", "", "trusted subnet")
 
 	flag.Parse()
 
@@ -85,15 +88,17 @@ func CheckFlagEnv() {
 		dbConnection = envJSON.BdConnection
 		pem = envJSON.Pem
 		key = envJSON.Key
+		trustedSubnet = envJSON.TrustedSubnet
 
 		Env = env{
-			Address:      address,
-			FilePath:     filePath,
-			BaseURL:      basePath,
-			BdConnection: dbConnection,
-			EnableHTTPS:  enableHTTPS,
-			Pem:          pem,
-			Key:          key,
+			Address:       address,
+			FilePath:      filePath,
+			BaseURL:       basePath,
+			BdConnection:  dbConnection,
+			EnableHTTPS:   enableHTTPS,
+			Pem:           pem,
+			Key:           key,
+			TrustedSubnet: trustedSubnet,
 		}
 
 		defer func(jsonFile *os.File) {
@@ -131,6 +136,12 @@ func CheckFlagEnv() {
 			key = os.Getenv("KEY")
 		} else {
 			key = ""
+		}
+
+		if os.Getenv("TRUSTED_SUBNET") != "" {
+			trustedSubnet = os.Getenv("TRUSTED_SUBNET")
+		} else {
+			trustedSubnet = ""
 		}
 
 		if os.Getenv("DATABASE_DSN") != "" {
@@ -177,14 +188,20 @@ func CheckFlagEnv() {
 			key = *flagKey
 		}
 
+		if *flagTrustedSubnet == "" {
+
+			trustedSubnet = *flagTrustedSubnet
+		}
+
 		Env = env{
-			Address:      address,
-			FilePath:     filePath,
-			BaseURL:      basePath,
-			BdConnection: dbConnection,
-			EnableHTTPS:  enableHTTPS,
-			Pem:          pem,
-			Key:          key,
+			Address:       address,
+			FilePath:      filePath,
+			BaseURL:       basePath,
+			BdConnection:  dbConnection,
+			EnableHTTPS:   enableHTTPS,
+			Pem:           pem,
+			Key:           key,
+			TrustedSubnet: trustedSubnet,
 		}
 	}
 }

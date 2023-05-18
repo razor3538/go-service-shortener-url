@@ -152,3 +152,14 @@ func (us *URLService) GetByUserID(userID string) ([]models.FullURL, error) {
 
 	return result, nil
 }
+
+// GetAllUsersAndUrls возвращает количество уникальных пользователей и общее количество сокращенных урлов
+func (us *URLService) GetAllUsersAndUrls() (models.UserAndUrlsResponse, error) {
+	countUser, countUrls, err := urlRepo.GetAllUsersAndUrls()
+
+	if err != nil {
+		return models.UserAndUrlsResponse{}, err
+	}
+
+	return models.UserAndUrlsResponse{UrlsCount: countUrls, UsersCount: countUser}, nil
+}

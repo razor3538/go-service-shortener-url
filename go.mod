@@ -8,6 +8,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/joho/godotenv v1.4.0
 	github.com/speps/go-hashids v2.0.0+incompatible
+	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
 	gorm.io/driver/postgres v1.4.5
 	gorm.io/driver/sqlite v1.4.2
 	gorm.io/gorm v1.24.1-0.20221019064659-5dd2bb482755
@@ -36,15 +37,11 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
-	github.com/robfig/cron/v3 v3.0.0 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
-	github.com/yuin/goldmark v1.4.13 // indirect
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
-	golang.org/x/mod v0.7.0 // indirect
 	golang.org/x/net v0.5.0 // indirect
 	golang.org/x/sys v0.4.0 // indirect
 	golang.org/x/text v0.6.0 // indirect
-	golang.org/x/tools v0.5.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
