@@ -2,14 +2,18 @@ package main
 
 import (
 	"context"
+	"example.com/m/v2/internal/config"
+	pb "example.com/m/v2/internal/proto"
+	"example.com/m/v2/internal/routes"
+	"example.com/m/v2/internal/server"
 	"fmt"
+	"github.com/gin-contrib/pprof"
+	"google.golang.org/grpc"
+	"log"
+	"net"
 	"os"
 	"os/signal"
 	"syscall"
-
-	"example.com/m/v2/internal/config"
-	"example.com/m/v2/internal/routes"
-	"github.com/gin-contrib/pprof"
 )
 
 var (
@@ -35,22 +39,40 @@ func main() {
 	config.CheckFlagEnv()
 	config.InitBD()
 
-	address := config.Env.Address
-	pem := config.Env.Pem
-	key := config.Env.Key
-
 	r := routes.SetupRouter()
 	pprof.Register(r)
 
 	go func() {
-		if config.Env.EnableHTTPS {
-			err := r.RunTLS(address, pem, key)
+		address := config.Env.Address
+		pem := config.Env.Pem
+		key := config.Env.Key
+
+		if config.Env.EnableGRPC {
+			listen, err := net.Listen("tcp", address)
 			if err != nil {
-				panic(err)
+				log.Fatal(err)
+			}
+			s := grpc.NewServer()
+
+			pb.RegisterURLsServer(s, &server.URLServer{})
+
+			fmt.Println("Сервер gRPC начал работу")
+			if err := s.Serve(listen); err != nil {
+				log.Fatal(err)
 			}
 		} else {
-			if err := r.Run(address); err != nil {
-				panic(err)
+			if config.Env.EnableHTTPS {
+				err := r.RunTLS(address, pem, key)
+				if err != nil {
+					panic(err)
+				}
+			} else {
+				fmt.Println("Сервер начал работу")
+				fmt.Println(address)
+
+				if err := r.Run(address); err != nil {
+					panic(err)
+				}
 			}
 		}
 	}()

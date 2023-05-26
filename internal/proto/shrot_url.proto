@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package demo;
+
+option go_package = "demo/proto";
+
+message SaveBatchURLRequest {
+  string id = 1;
+  string short_url = 2;
+}
+
+message URL {
+  string id = 1;
+  string full_url = 2;
+  string short_url = 3;
+  string user_id = 4;
+  string string_short_id = 5;
+}
+
+message ShortenURLRequest {
+  string url_model = 1;
+  string user_id = 2;
+}
+
+message ShortenURLResponse {
+  string short_url = 1;
+  string error = 2;
+}
+
+message DeleteURLsRequest {
+  string urls = 1;
+}
+
+message DeleteURLsResponse {
+  string status = 1;
+}
+
+message ReturnFullURLRequest {
+  string url = 1;
+}
+
+message ReturnFullURLResponse {
+  string url = 1;
+  string error = 2;
+}
+
+message GetFullURLRequest {
+  string user_id = 1;
+}
+
+message GetFullURLResponse {
+  string url_string = 1;
+  string error = 2;
+}
+
+message GetByUserIDRequest {
+  string bearer_token = 1;
+}
+
+message GetByUserIDResponse {
+  repeated string full_url = 1;
+  repeated string short_url = 2;
+  string error = 3; // ошибка
+}
+
+message SaveManyRequest {
+  repeated SaveBatchURLRequest urls_request = 1;
+}
+
+message SaveManyResponse {
+  repeated SaveBatchURLRequest urls_request = 1;
+  string error = 2; // ошибка
+}
+
+message PingRequest {}
+
+message PingResponse {
+  int32 status_code = 1;
+  string err = 2;
+}
+
+message GetAllUsersAndUrlsRequest {
+  string x_real_ip = 1;
+}
+
+message GetAllUsersAndUrlsResponse {
+  int32 count_user = 1;
+  int32 count_urls = 2;
+  string error = 3; // ошибка
+}
+
+service URLs {
+  rpc ShortenURL(ShortenURLRequest) returns (ShortenURLResponse);
+  rpc DeleteURLs(DeleteURLsRequest) returns (DeleteURLsResponse);
+  rpc ReturnFullURL(ReturnFullURLRequest) returns (ReturnFullURLResponse);
+  rpc GetFullURL(GetFullURLRequest) returns (GetFullURLResponse);
+  rpc GetByUserID(GetByUserIDRequest) returns (GetByUserIDResponse);
+  rpc SaveMany(SaveManyRequest) returns (SaveManyResponse);
+  rpc Ping(PingRequest) returns (PingResponse);
+  rpc GetAllUsersAndUrls(GetAllUsersAndUrlsRequest) returns (GetAllUsersAndUrlsResponse);
+}

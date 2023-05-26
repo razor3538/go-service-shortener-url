@@ -14,13 +14,15 @@ import (
 
 // env Структура для хранения переменных среды
 type env struct {
-	Address      string `json:"server_address"`
-	Pem          string `json:"pem"`
-	Key          string `json:"key"`
-	FilePath     string `json:"file_storage_path"`
-	BaseURL      string `json:"base_url"`
-	BdConnection string `json:"database_dsn"`
-	EnableHTTPS  bool   `json:"enable_https"`
+	Address       string `json:"server_address"`
+	Pem           string `json:"pem"`
+	Key           string `json:"key"`
+	FilePath      string `json:"file_storage_path"`
+	BaseURL       string `json:"base_url"`
+	BdConnection  string `json:"database_dsn"`
+	EnableHTTPS   bool   `json:"enable_https"`
+	EnableGRPC    bool   `json:"enable_grpc"`
+	TrustedSubnet string `json:"trusted_subnet"`
 }
 
 // Env глобальная переменная для доступа к переменным среды
@@ -36,6 +38,8 @@ func CheckFlagEnv() {
 	var key string
 	var enableHTTPS bool
 	var configFile string
+	var trustedSubnet string
+	var enableGRPC bool
 
 	err := godotenv.Load()
 
@@ -57,6 +61,8 @@ func CheckFlagEnv() {
 	var flagHTTPS = flag.Bool("s", false, "Enable TLS connection")
 	var flagPem = flag.String("p", "", "pem")
 	var flagKey = flag.String("k", "", "key")
+	var flagTrustedSubnet = flag.String("t", "", "trusted subnet")
+	var flagEnableGRPC = flag.Bool("r", false, "enable grpc")
 
 	flag.Parse()
 
@@ -85,15 +91,19 @@ func CheckFlagEnv() {
 		dbConnection = envJSON.BdConnection
 		pem = envJSON.Pem
 		key = envJSON.Key
+		trustedSubnet = envJSON.TrustedSubnet
+		enableGRPC = envJSON.EnableGRPC
 
 		Env = env{
-			Address:      address,
-			FilePath:     filePath,
-			BaseURL:      basePath,
-			BdConnection: dbConnection,
-			EnableHTTPS:  enableHTTPS,
-			Pem:          pem,
-			Key:          key,
+			Address:       address,
+			FilePath:      filePath,
+			BaseURL:       basePath,
+			BdConnection:  dbConnection,
+			EnableHTTPS:   enableHTTPS,
+			Pem:           pem,
+			Key:           key,
+			TrustedSubnet: trustedSubnet,
+			EnableGRPC:    enableGRPC,
 		}
 
 		defer func(jsonFile *os.File) {
@@ -103,10 +113,13 @@ func CheckFlagEnv() {
 			}
 		}(jsonFile)
 	} else {
+		println("dsadas")
 		if os.Getenv("SERVER_ADDRESS") != "" {
 			address = os.Getenv("SERVER_ADDRESS")
 		} else {
 			address = "localhost:8080"
+			println("address")
+			println(address)
 		}
 
 		if os.Getenv("FILE_STORAGE_PATH") != "" {
@@ -133,13 +146,25 @@ func CheckFlagEnv() {
 			key = ""
 		}
 
-		if os.Getenv("DATABASE_DSN") != "" {
-			https, err := strconv.ParseBool(os.Getenv("ENABLE_HTTPS"))
-			if err != nil {
-				return
-			}
-			if https {
-				enableHTTPS = https
+		if os.Getenv("TRUSTED_SUBNET") != "" {
+			trustedSubnet = os.Getenv("TRUSTED_SUBNET")
+		} else {
+			trustedSubnet = ""
+		}
+
+		checkBool, _ := strconv.ParseBool(os.Getenv("ENABLE_GRPC"))
+
+		if checkBool {
+			enableGRPC = checkBool
+		} else {
+			enableGRPC = false
+		}
+
+		checkBool, _ = strconv.ParseBool(os.Getenv("ENABLE_HTTPS"))
+
+		if checkBool {
+			if checkBool {
+				enableHTTPS = checkBool
 			} else {
 				enableHTTPS = false
 			}
@@ -177,14 +202,26 @@ func CheckFlagEnv() {
 			key = *flagKey
 		}
 
+		if *flagTrustedSubnet == "" {
+
+			trustedSubnet = *flagTrustedSubnet
+		}
+
+		if *flagEnableGRPC {
+
+			enableGRPC = *flagEnableGRPC
+		}
+
 		Env = env{
-			Address:      address,
-			FilePath:     filePath,
-			BaseURL:      basePath,
-			BdConnection: dbConnection,
-			EnableHTTPS:  enableHTTPS,
-			Pem:          pem,
-			Key:          key,
+			Address:       address,
+			FilePath:      filePath,
+			BaseURL:       basePath,
+			BdConnection:  dbConnection,
+			EnableHTTPS:   enableHTTPS,
+			Pem:           pem,
+			Key:           key,
+			TrustedSubnet: trustedSubnet,
+			EnableGRPC:    enableGRPC,
 		}
 	}
 }

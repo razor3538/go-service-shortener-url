@@ -3,6 +3,7 @@ package repositories
 import (
 	"encoding/json"
 	"errors"
+	"golang.org/x/exp/slices"
 	"os"
 	"strings"
 
@@ -144,4 +145,34 @@ func (ur *URLRepo) GetByUserID(id string) ([]models.FullURL, error) {
 		return []models.FullURL{}, err
 	}
 	return url, nil
+}
+
+// GetAllUsersAndUrls возвращает количество уникальных пользователей и общее количество сокращенных урлов
+func (ur *URLRepo) GetAllUsersAndUrls() (int, int, error) {
+	var urlsWithUser []domain.URL
+	var urls []domain.URL
+	var uniqueURL []string
+
+	if err := config.DB.
+		Model(&domain.URL{}).
+		Where("user_id not ?", "").
+		Scan(&urlsWithUser).
+		Error; err != nil {
+		return 0, 0, err
+	}
+
+	if err := config.DB.
+		Model(&domain.URL{}).
+		Scan(&urls).
+		Error; err != nil {
+		return 0, 0, err
+	}
+
+	for _, url := range urlsWithUser {
+		if !slices.Contains(uniqueURL, url.UserID) {
+			uniqueURL = append(uniqueURL, url.UserID)
+		}
+	}
+
+	return len(uniqueURL), len(urls), nil
 }

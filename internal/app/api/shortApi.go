@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"example.com/m/v2/internal/app/models"
 	"example.com/m/v2/internal/config"
@@ -214,4 +215,27 @@ func (sua *ShortURLAPI) Ping(c *gin.Context) {
 		}
 		c.Writer.WriteHeader(http.StatusOK)
 	}
+}
+
+// GetAllUsersAndUrls обработчик эндопоинта для получения количества уникальных пользователей и общего количества сокращенных урлов
+func (sua *ShortURLAPI) GetAllUsersAndUrls(c *gin.Context) {
+	realIP := c.GetHeader("X-Real-IP")
+
+	listIP := strings.Split(config.Env.TrustedSubnet, ", ")
+
+	for _, ip := range listIP {
+		if ip == realIP {
+			result, err := urlService.GetAllUsersAndUrls()
+
+			if err != nil {
+				CreateError(http.StatusBadRequest, err, c)
+				return
+			}
+
+			c.JSON(http.StatusOK, result)
+			return
+		}
+	}
+
+	c.Status(http.StatusForbidden)
 }
