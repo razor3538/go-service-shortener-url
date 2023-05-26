@@ -54,7 +54,7 @@ func main() {
 			}
 			s := grpc.NewServer()
 
-			pb.RegisterURLsServer(s, &server.UrlServer{})
+			pb.RegisterURLsServer(s, &server.URLServer{})
 
 			fmt.Println("Сервер gRPC начал работу")
 			if err := s.Serve(listen); err != nil {
