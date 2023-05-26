@@ -219,12 +219,12 @@ func (sua *ShortURLAPI) Ping(c *gin.Context) {
 
 // GetAllUsersAndUrls обработчик эндопоинта для получения количества уникальных пользователей и общего количества сокращенных урлов
 func (sua *ShortURLAPI) GetAllUsersAndUrls(c *gin.Context) {
-	realIp := c.GetHeader("X-Real-IP")
+	realIP := c.GetHeader("X-Real-IP")
 
-	listIp := strings.Split(config.Env.TrustedSubnet, ", ")
+	listIP := strings.Split(config.Env.TrustedSubnet, ", ")
 
-	for _, ip := range listIp {
-		if ip == realIp {
+	for _, ip := range listIP {
+		if ip == realIP {
 			result, err := urlService.GetAllUsersAndUrls()
 
 			if err != nil {

@@ -11,15 +11,15 @@ import (
 	"strings"
 )
 
-// UrlServer поддерживает все необходимые методы сервера.
-type UrlServer struct {
+// URLServer поддерживает все необходимые методы сервера.
+type URLServer struct {
 	pb.UnimplementedURLsServer
 }
 
 var urlService = services.NewURLService()
 
 // ShortenURL реализует интерфейс добавления пользователя.
-func (us *UrlServer) ShortenURL(ctx context.Context, in *pb.ShortenURLRequest) (*pb.ShortenURLResponse, error) {
+func (us *URLServer) ShortenURL(ctx context.Context, in *pb.ShortenURLRequest) (*pb.ShortenURLResponse, error) {
 	var response pb.ShortenURLResponse
 
 	save, err := urlService.Save(in.UrlModel, in.UserId)
@@ -33,7 +33,7 @@ func (us *UrlServer) ShortenURL(ctx context.Context, in *pb.ShortenURLRequest) (
 }
 
 // DeleteURLs реализует интерфейс добавления пользователя.
-func (us *UrlServer) DeleteURLs(ctx context.Context, in *pb.DeleteURLsRequest) (*pb.DeleteURLsResponse, error) {
+func (us *URLServer) DeleteURLs(ctx context.Context, in *pb.DeleteURLsRequest) (*pb.DeleteURLsResponse, error) {
 	var response pb.DeleteURLsResponse
 
 	go urlService.Delete(tools.StringToSlice(in.Urls))
@@ -44,7 +44,7 @@ func (us *UrlServer) DeleteURLs(ctx context.Context, in *pb.DeleteURLsRequest) (
 }
 
 // ReturnFullURL реализует интерфейс добавления пользователя.
-func (us *UrlServer) ReturnFullURL(ctx context.Context, in *pb.ReturnFullURLRequest) (*pb.ReturnFullURLResponse, error) {
+func (us *URLServer) ReturnFullURL(ctx context.Context, in *pb.ReturnFullURLRequest) (*pb.ReturnFullURLResponse, error) {
 	var response pb.ReturnFullURLResponse
 
 	url, err := urlService.GetByFullURL(in.Url)
@@ -59,7 +59,7 @@ func (us *UrlServer) ReturnFullURL(ctx context.Context, in *pb.ReturnFullURLRequ
 }
 
 // GetFullURL реализует интерфейс добавления пользователя.
-func (us *UrlServer) GetFullURL(ctx context.Context, in *pb.GetFullURLRequest) (*pb.GetFullURLResponse, error) {
+func (us *URLServer) GetFullURL(ctx context.Context, in *pb.GetFullURLRequest) (*pb.GetFullURLResponse, error) {
 	var response pb.GetFullURLResponse
 
 	url, err := urlService.Get(in.UserId)
@@ -79,7 +79,7 @@ func (us *UrlServer) GetFullURL(ctx context.Context, in *pb.GetFullURLRequest) (
 }
 
 // Ping реализует интерфейс добавления пользователя.
-func (us *UrlServer) Ping(ctx context.Context, in *pb.PingRequest) (*pb.PingResponse, error) {
+func (us *URLServer) Ping(ctx context.Context, in *pb.PingRequest) (*pb.PingResponse, error) {
 	var response pb.PingResponse
 
 	sqlDB, err := config.DB.DB()
@@ -102,12 +102,12 @@ func (us *UrlServer) Ping(ctx context.Context, in *pb.PingRequest) (*pb.PingResp
 }
 
 // GetAllUsersAndUrls реализует интерфейс добавления пользователя.
-func (us *UrlServer) GetAllUsersAndUrls(ctx context.Context, in *pb.GetAllUsersAndUrlsRequest) (*pb.GetAllUsersAndUrlsResponse, error) {
+func (us *URLServer) GetAllUsersAndUrls(ctx context.Context, in *pb.GetAllUsersAndUrlsRequest) (*pb.GetAllUsersAndUrlsResponse, error) {
 	var response pb.GetAllUsersAndUrlsResponse
 
-	listIp := strings.Split(config.Env.TrustedSubnet, ", ")
+	listIP := strings.Split(config.Env.TrustedSubnet, ", ")
 
-	for _, ip := range listIp {
+	for _, ip := range listIP {
 		if ip == in.XRealIp {
 			result, err := urlService.GetAllUsersAndUrls()
 
@@ -129,7 +129,7 @@ func (us *UrlServer) GetAllUsersAndUrls(ctx context.Context, in *pb.GetAllUsersA
 }
 
 // GetByUserID реализует интерфейс добавления пользователя.
-func (us *UrlServer) GetByUserID(ctx context.Context, in *pb.GetByUserIDRequest) (*pb.GetByUserIDResponse, error) {
+func (us *URLServer) GetByUserID(ctx context.Context, in *pb.GetByUserIDRequest) (*pb.GetByUserIDResponse, error) {
 	var response pb.GetByUserIDResponse
 
 	if in.BearerToken == "" {
@@ -153,7 +153,7 @@ func (us *UrlServer) GetByUserID(ctx context.Context, in *pb.GetByUserIDRequest)
 }
 
 // SaveMany реализует интерфейс добавления пользователя.
-func (us *UrlServer) SaveMany(ctx context.Context, in *pb.SaveManyRequest) (*pb.SaveManyResponse, error) {
+func (us *URLServer) SaveMany(ctx context.Context, in *pb.SaveManyRequest) (*pb.SaveManyResponse, error) {
 	var response pb.SaveManyResponse
 	var serviceModel []models.SaveBatchURLRequest
 
@@ -171,9 +171,9 @@ func (us *UrlServer) SaveMany(ctx context.Context, in *pb.SaveManyRequest) (*pb.
 		return &response, err
 	}
 
-	var responseModel *pb.SaveBatchURLRequest
-
 	for _, model := range urlModel {
+		var responseModel *pb.SaveBatchURLRequest
+
 		responseModel.FullUrl = model.ShortURL
 		responseModel.Id = model.ID
 		response.UrlsRequest = append(response.UrlsRequest, responseModel)

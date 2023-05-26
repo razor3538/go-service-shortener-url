@@ -151,7 +151,7 @@ func (ur *URLRepo) GetByUserID(id string) ([]models.FullURL, error) {
 func (ur *URLRepo) GetAllUsersAndUrls() (int, int, error) {
 	var urlsWithUser []domain.URL
 	var urls []domain.URL
-	var uniqueUrl []string
+	var uniqueURL []string
 
 	if err := config.DB.
 		Model(&domain.URL{}).
@@ -169,10 +169,10 @@ func (ur *URLRepo) GetAllUsersAndUrls() (int, int, error) {
 	}
 
 	for _, url := range urlsWithUser {
-		if !slices.Contains(uniqueUrl, url.UserID) {
-			uniqueUrl = append(uniqueUrl, url.UserID)
+		if !slices.Contains(uniqueURL, url.UserID) {
+			uniqueURL = append(uniqueURL, url.UserID)
 		}
 	}
 
-	return len(uniqueUrl), len(urls), nil
+	return len(uniqueURL), len(urls), nil
 }
