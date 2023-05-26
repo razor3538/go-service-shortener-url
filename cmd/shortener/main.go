@@ -39,17 +39,15 @@ func main() {
 	config.CheckFlagEnv()
 	config.InitBD()
 
-	address := config.Env.Address
-	pem := config.Env.Pem
-	key := config.Env.Key
-
 	r := routes.SetupRouter()
 	pprof.Register(r)
 
 	go func() {
-		if config.Env.EnableGRPC {
-			println("grpc")
+		address := config.Env.Address
+		pem := config.Env.Pem
+		key := config.Env.Key
 
+		if config.Env.EnableGRPC {
 			listen, err := net.Listen("tcp", address)
 			if err != nil {
 				log.Fatal(err)
@@ -63,7 +61,6 @@ func main() {
 				log.Fatal(err)
 			}
 		} else {
-			println(config.Env.EnableHTTPS)
 			if config.Env.EnableHTTPS {
 				err := r.RunTLS(address, pem, key)
 				if err != nil {
