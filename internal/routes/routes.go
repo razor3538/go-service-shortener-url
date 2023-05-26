@@ -31,5 +31,7 @@ func SetupRouter() *gin.Engine {
 
 	r.GET("/ping", shortenAPI.Ping)
 
+	r.POST("/get_info", shortenAPI.GetAllUsersAndUrls)
+
 	return r
 }

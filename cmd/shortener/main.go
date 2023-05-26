@@ -69,6 +69,9 @@ func main() {
 				panic(err)
 			}
 		} else {
+			fmt.Println("Сервер начал работу")
+			fmt.Println(address)
+
 			if err := r.Run(address); err != nil {
 				panic(err)
 			}
