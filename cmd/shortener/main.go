@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"example.com/m/v2/internal/config"
 	pb "example.com/m/v2/internal/proto"
 	"example.com/m/v2/internal/routes"
@@ -10,6 +11,9 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 var (
@@ -20,13 +24,13 @@ var (
 
 // main основная точка входа приложения
 func main() {
-	//ctx, stop := signal.NotifyContext(context.Background(),
-	//	syscall.SIGINT,
-	//	syscall.SIGTERM,
-	//	syscall.SIGQUIT,
-	//	os.Interrupt)
-	//
-	//defer stop()
+	ctx, stop := signal.NotifyContext(context.Background(),
+		syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGQUIT,
+		os.Interrupt)
+
+	defer stop()
 
 	println(fmt.Sprintf("Build version: %s", buildVersion))
 	println(fmt.Sprintf("Build date: %s", buildDate))
@@ -44,6 +48,8 @@ func main() {
 
 	go func() {
 		if config.Env.EnableGRPC {
+			println("grpc")
+
 			listen, err := net.Listen("tcp", address)
 			if err != nil {
 				log.Fatal(err)
@@ -56,25 +62,26 @@ func main() {
 			if err := s.Serve(listen); err != nil {
 				log.Fatal(err)
 			}
-		}
-
-		if config.Env.EnableHTTPS {
-			err := r.RunTLS(address, pem, key)
-			if err != nil {
-				panic(err)
-			}
 		} else {
-			fmt.Println("Сервер начал работу")
-			fmt.Println(address)
+			println(config.Env.EnableHTTPS)
+			if config.Env.EnableHTTPS {
+				err := r.RunTLS(address, pem, key)
+				if err != nil {
+					panic(err)
+				}
+			} else {
+				fmt.Println("Сервер начал работу")
+				fmt.Println(address)
 
-			if err := r.Run(address); err != nil {
-				panic(err)
+				if err := r.Run(address); err != nil {
+					panic(err)
+				}
 			}
 		}
 	}()
 
-	//<-ctx.Done()
-	//if ctx.Err() != nil {
-	//	fmt.Printf("Приложение завершенно сигналом: %v\n", ctx.Err())
-	//}
+	<-ctx.Done()
+	if ctx.Err() != nil {
+		fmt.Printf("Приложение завершенно сигналом: %v\n", ctx.Err())
+	}
 }
