@@ -113,10 +113,13 @@ func CheckFlagEnv() {
 			}
 		}(jsonFile)
 	} else {
+		println("dsadas")
 		if os.Getenv("SERVER_ADDRESS") != "" {
 			address = os.Getenv("SERVER_ADDRESS")
 		} else {
 			address = "localhost:8080"
+			println("address")
+			println(address)
 		}
 
 		if os.Getenv("FILE_STORAGE_PATH") != "" {
@@ -149,10 +152,7 @@ func CheckFlagEnv() {
 			trustedSubnet = ""
 		}
 
-		checkBool, errBool := strconv.ParseBool(os.Getenv("ENABLE_GRPC"))
-		if errBool != nil {
-			return
-		}
+		checkBool, _ := strconv.ParseBool(os.Getenv("ENABLE_GRPC"))
 
 		if checkBool {
 			enableGRPC = checkBool
