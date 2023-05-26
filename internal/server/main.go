@@ -160,7 +160,7 @@ func (us *URLServer) SaveMany(ctx context.Context, in *pb.SaveManyRequest) (*pb.
 	for _, model := range in.UrlsRequest {
 		serviceModel = append(serviceModel, models.SaveBatchURLRequest{
 			ID:      model.Id,
-			FullURL: model.FullUrl,
+			FullURL: model.ShortURL,
 		})
 	}
 
@@ -172,11 +172,12 @@ func (us *URLServer) SaveMany(ctx context.Context, in *pb.SaveManyRequest) (*pb.
 	}
 
 	for _, model := range urlModel {
-		var responseModel *pb.SaveBatchURLRequest
+		var responseModel = pb.SaveBatchURLRequest{
+			ShortURL: model.ShortURL,
+			Id:       model.ID,
+		}
 
-		responseModel.FullUrl = model.ShortURL
-		responseModel.Id = model.ID
-		response.UrlsRequest = append(response.UrlsRequest, responseModel)
+		response.UrlsRequest = append(response.UrlsRequest, &responseModel)
 	}
 
 	return &response, nil
