@@ -1,20 +1,15 @@
 package main
 
 import (
-	"context"
-	"example.com/m/v2/internal/server"
-	"fmt"
-	"google.golang.org/grpc"
-	"log"
-	"net"
-	"os"
-	"os/signal"
-	"syscall"
-
 	"example.com/m/v2/internal/config"
 	pb "example.com/m/v2/internal/proto"
 	"example.com/m/v2/internal/routes"
+	"example.com/m/v2/internal/server"
+	"fmt"
 	"github.com/gin-contrib/pprof"
+	"google.golang.org/grpc"
+	"log"
+	"net"
 )
 
 var (
@@ -25,13 +20,13 @@ var (
 
 // main основная точка входа приложения
 func main() {
-	ctx, stop := signal.NotifyContext(context.Background(),
-		syscall.SIGINT,
-		syscall.SIGTERM,
-		syscall.SIGQUIT,
-		os.Interrupt)
-
-	defer stop()
+	//ctx, stop := signal.NotifyContext(context.Background(),
+	//	syscall.SIGINT,
+	//	syscall.SIGTERM,
+	//	syscall.SIGQUIT,
+	//	os.Interrupt)
+	//
+	//defer stop()
 
 	println(fmt.Sprintf("Build version: %s", buildVersion))
 	println(fmt.Sprintf("Build date: %s", buildDate))
@@ -78,8 +73,8 @@ func main() {
 		}
 	}()
 
-	<-ctx.Done()
-	if ctx.Err() != nil {
-		fmt.Printf("Приложение завершенно сигналом: %v\n", ctx.Err())
-	}
+	//<-ctx.Done()
+	//if ctx.Err() != nil {
+	//	fmt.Printf("Приложение завершенно сигналом: %v\n", ctx.Err())
+	//}
 }
