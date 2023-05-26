@@ -21,6 +21,7 @@ type env struct {
 	BaseURL       string `json:"base_url"`
 	BdConnection  string `json:"database_dsn"`
 	EnableHTTPS   bool   `json:"enable_https"`
+	EnableGRPC    bool   `json:"enable_grpc"`
 	TrustedSubnet string `json:"trusted_subnet"`
 }
 
@@ -38,6 +39,7 @@ func CheckFlagEnv() {
 	var enableHTTPS bool
 	var configFile string
 	var trustedSubnet string
+	var enableGRPC bool
 
 	err := godotenv.Load()
 
@@ -60,6 +62,7 @@ func CheckFlagEnv() {
 	var flagPem = flag.String("p", "", "pem")
 	var flagKey = flag.String("k", "", "key")
 	var flagTrustedSubnet = flag.String("t", "", "trusted subnet")
+	var flagEnableGRPC = flag.Bool("r", false, "enable grpc")
 
 	flag.Parse()
 
@@ -89,6 +92,7 @@ func CheckFlagEnv() {
 		pem = envJSON.Pem
 		key = envJSON.Key
 		trustedSubnet = envJSON.TrustedSubnet
+		enableGRPC = envJSON.EnableGRPC
 
 		Env = env{
 			Address:       address,
@@ -99,6 +103,7 @@ func CheckFlagEnv() {
 			Pem:           pem,
 			Key:           key,
 			TrustedSubnet: trustedSubnet,
+			EnableGRPC:    enableGRPC,
 		}
 
 		defer func(jsonFile *os.File) {
@@ -144,13 +149,22 @@ func CheckFlagEnv() {
 			trustedSubnet = ""
 		}
 
-		if os.Getenv("DATABASE_DSN") != "" {
-			https, err := strconv.ParseBool(os.Getenv("ENABLE_HTTPS"))
-			if err != nil {
-				return
-			}
-			if https {
-				enableHTTPS = https
+		checkBool, errBool := strconv.ParseBool(os.Getenv("ENABLE_GRPC"))
+		if errBool != nil {
+			return
+		}
+
+		if checkBool {
+			enableGRPC = checkBool
+		} else {
+			enableGRPC = false
+		}
+
+		checkBool, _ = strconv.ParseBool(os.Getenv("ENABLE_HTTPS"))
+
+		if checkBool {
+			if checkBool {
+				enableHTTPS = checkBool
 			} else {
 				enableHTTPS = false
 			}
@@ -193,6 +207,11 @@ func CheckFlagEnv() {
 			trustedSubnet = *flagTrustedSubnet
 		}
 
+		if *flagEnableGRPC {
+
+			enableGRPC = *flagEnableGRPC
+		}
+
 		Env = env{
 			Address:       address,
 			FilePath:      filePath,
@@ -202,6 +221,7 @@ func CheckFlagEnv() {
 			Pem:           pem,
 			Key:           key,
 			TrustedSubnet: trustedSubnet,
+			EnableGRPC:    enableGRPC,
 		}
 	}
 }

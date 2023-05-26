@@ -2,12 +2,17 @@ package main
 
 import (
 	"context"
+	"example.com/m/v2/internal/server"
 	"fmt"
+	"google.golang.org/grpc"
+	"log"
+	"net"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"example.com/m/v2/internal/config"
+	pb "example.com/m/v2/internal/proto"
 	"example.com/m/v2/internal/routes"
 	"github.com/gin-contrib/pprof"
 )
@@ -43,6 +48,21 @@ func main() {
 	pprof.Register(r)
 
 	go func() {
+		if config.Env.EnableGRPC {
+			listen, err := net.Listen("tcp", address)
+			if err != nil {
+				log.Fatal(err)
+			}
+			s := grpc.NewServer()
+
+			pb.RegisterURLsServer(s, &server.UrlServer{})
+
+			fmt.Println("Сервер gRPC начал работу")
+			if err := s.Serve(listen); err != nil {
+				log.Fatal(err)
+			}
+		}
+
 		if config.Env.EnableHTTPS {
 			err := r.RunTLS(address, pem, key)
 			if err != nil {
